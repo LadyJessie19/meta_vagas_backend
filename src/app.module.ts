@@ -6,9 +6,10 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { VacancyModule } from './vacancy/vacancy.module';
 import { CompanyModule } from './company/company.module';
+import { TecnologyModule } from './tecnology/tecnology.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, VacancyModule, CompanyModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, VacancyModule, CompanyModule, TecnologyModule],
   controllers: [AppController],
   providers: [AppService],
 })
