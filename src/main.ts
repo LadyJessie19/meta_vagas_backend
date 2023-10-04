@@ -5,7 +5,7 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  const app:INestApplication = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule);
 
   const configService = app.get<ConfigService>(ConfigService);
 
@@ -21,8 +21,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  // await app.listen(configService.get('APP_PORT') || 3003);
-  // TODO: Fix this. Why configService doesn't work
-  await app.listen(3434);
+  await app.listen(configService.get('APP_PORT') || 3003);
 }
 bootstrap();
