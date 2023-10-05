@@ -1,26 +1,65 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
+import { Company } from 'src/database/entities/company.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
 @Injectable()
 export class CompanyService {
-  create(createCompanyDto: CreateCompanyDto) {
-    return 'This action adds a new company';
+  constructor(
+    @InjectRepository(Company)
+    private readonly repository: Repository<Company>,
+  ) {}
+
+
+  async create(createCompanyDto: CreateCompanyDto): Promise<Company> {
+    try {
+      const newCompany = this.repository.create(createCompanyDto);
+      await this.repository.save(newCompany);
+      return newCompany;
+    } catch (error: any) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        error.status || 500,
+      );
+    }
   }
 
-  findAll() {
-    return `This action returns all company`;
+
+  async findAll(): Promise<Company[]> {
+    return await this.repository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} company`;
+  async findOne(id: number) {
+    try {
+      const companyFound = await this.repository.findOneBy({ id });
+
+      if (!companyFound) {
+        throw new NotFoundException('company with this id not found.');
+      }
+
+      return companyFound;
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        error.status || 500,
+      );
+    }
   }
 
-  update(id: number, updateCompanyDto: UpdateCompanyDto) {
-    return `This action updates a #${id} company`;
-  }
+  async update(id: number, updateCompanyDto: UpdateCompanyDto) {
+    try {
+      await this.repository.findOneByOrFail({ id })
 
-  remove(id: number) {
-    return `This action removes a #${id} company`;
+      await this.repository.update({ id }, updateCompanyDto);
+
+      return await this.findOne(id);
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        error.status || 500,
+      );
+    }
   }
 }
