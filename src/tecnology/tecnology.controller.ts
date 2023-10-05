@@ -1,34 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { TecnologyService } from './tecnology.service';
 import { CreateTecnologyDto } from './dto/create-tecnology.dto';
-import { UpdateTecnologyDto } from './dto/update-tecnology.dto';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { ApiTags } from '@nestjs/swagger';
+import { RoleEnum } from 'src/enums/role.enum';
+import { Roles } from 'src/decorators/roles.decorator';
 
-@Controller('tecnology')
+@ApiTags('Technology')
+@UseGuards(RolesGuard)
+@Controller('tecnologies')
 export class TecnologyController {
   constructor(private readonly tecnologyService: TecnologyService) {}
 
+  // @Roles(RoleEnum.admin)
   @Post()
-  create(@Body() createTecnologyDto: CreateTecnologyDto) {
-    return this.tecnologyService.create(createTecnologyDto);
+  async create(@Body() createTecnologyDto: CreateTecnologyDto) {
+    return await this.tecnologyService.create(createTecnologyDto);
   }
 
   @Get()
-  findAll() {
-    return this.tecnologyService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.tecnologyService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTecnologyDto: UpdateTecnologyDto) {
-    return this.tecnologyService.update(+id, updateTecnologyDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.tecnologyService.remove(+id);
+  async findAll() {
+    return await this.tecnologyService.findAll();
   }
 }
