@@ -4,27 +4,41 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
+import { IsEmail } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Vacancy } from './vacancy.entity';
+import { RoleEnum } from '';
+import * as bcrypt from 'bcrypt';
 
-// This is just to serve as an example to the users entity
-
-@Entity('users')
+@Entity('user')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 100, nullable: false, unique: true })
+  @Column()
+  name: string;
+
+  @Column({ type: 'character varying', nullable: false, unique: true })
+  @IsEmail()
   email: string;
 
-  @Column({ type: 'varchar', length: 64, nullable: false, select: false })
+  @Column({ type: 'character varying', nullable: false, select: false })
   password: string;
 
-  @Column({ type: 'boolean', nullable: false, default: true })
+  @Column({ type: 'bool', default: true })
   isActive: boolean;
+
+  @Column({
+    type: 'enum',
+    nullable: false,
+    default: RoleEnum.candidate,
+    enum: RoleEnum,
+  })
+  role: RoleEnum;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -32,14 +46,18 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @OneToMany(() => Vacancy, (vacancy) => vacancy.user)
+  vacancy: Vacancy[];
+
   @BeforeInsert()
   @BeforeUpdate()
-  async passwordHash() {
+  public async passwordHash(password: string) {
     try {
-      this.password = await bcrypt.hash(this.password, 10);
+      if (password || this.password) {
+        this.password = await bcrypt.hash(password || this.password, 10);
+      }
     } catch (error) {
-      console.log(error);
-      throw new InternalServerErrorException('Error with password hash.');
+      throw new InternalServerErrorException('Error on password hash.');
     }
   }
 }
