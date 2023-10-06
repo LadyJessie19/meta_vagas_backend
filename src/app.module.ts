@@ -2,18 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 
 import { DatabaseModule } from './database/database.module';
-import { UserModule } from './users/user.module';
-import { UserService } from './users/user.service';
-import { UserController } from './users/user.controller';
+import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { VacancyService } from './vacancy/vacancy.service';
 import { VacancyModule } from './vacancy/vacancy.module';
-import { TecnologyService } from './tecnology/tecnology.service';
-import { TecnologyController } from './tecnology/tecnology.controller';
 import { TecnologyModule } from './tecnology/tecnology.module';
-import { CompanyService } from './company/company.service';
-import { CompanyController } from './company/company.controller';
 import { CompanyModule } from './company/company.module';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 
 @Module({
   imports: [
@@ -25,7 +20,7 @@ import { CompanyModule } from './company/company.module';
     TecnologyModule,
     CompanyModule,
   ],
-  providers: [UserService, VacancyService, TecnologyService, CompanyService],
-  controllers: [UserController, TecnologyController, CompanyController],
+  providers: [AppService],
+  controllers: [AppController],
 })
 export class AppModule {}

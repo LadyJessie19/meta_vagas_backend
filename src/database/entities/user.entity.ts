@@ -11,10 +11,10 @@ import {
 import { IsEmail } from 'class-validator';
 import { InternalServerErrorException } from '@nestjs/common';
 import { Vacancy } from './vacancy.entity';
-import { RoleEnum } from '';
-import * as bcrypt from 'bcrypt';
+import { RoleEnum } from '../../enums/user-roles.enum';
+import * as bcrypt from 'bcryptjs';
 
-@Entity('user')
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -35,7 +35,7 @@ export class User {
   @Column({
     type: 'enum',
     nullable: false,
-    default: RoleEnum.candidate,
+    default: RoleEnum.CANDIDATE,
     enum: RoleEnum,
   })
   role: RoleEnum;
@@ -46,8 +46,8 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @OneToMany(() => Vacancy, (vacancy) => vacancy.user)
-  vacancy: Vacancy[];
+  // @OneToMany(() => Vacancy, (vacancy) => vacancy.user)
+  // vacancy: Vacancy[];
 
   @BeforeInsert()
   @BeforeUpdate()

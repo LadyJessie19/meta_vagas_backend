@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import { User } from '../data-base/entities/user.entity';
+import { User } from '../database/entities/user.entity';
 import { currentUserMock } from '../testing/current.user.mock';
 
 export const getCurrentUserByContext = (context: ExecutionContext): User => {

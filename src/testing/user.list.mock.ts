@@ -19,7 +19,7 @@ export const userListMock = [
     },
     {
       id: 3,
-      name: 'Luiz'
+      name: 'Luiz',
       email: 'teste3@gmail.com',
       password: '$2a$10$YOUc214r.KvOYYjiFsDVH.0.8o8xvLj7cnc/jZdrzqfMclEMrW5g2',
       isActive: true,
