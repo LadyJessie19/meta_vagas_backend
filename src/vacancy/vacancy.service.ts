@@ -1,26 +1,114 @@
-import { Injectable } from '@nestjs/common';
+import {
+    BadRequestException,
+    HttpException,
+    HttpStatus,
+    Injectable,
+    InternalServerErrorException,
+    NotFoundException,
+} from '@nestjs/common';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
-import { UpdateVacancyDto } from './dto/update-vacancy.dto';
+import { updateVacancyDto } from './dto/update-vacancy.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Vacancy } from 'src/data-base/entities/vacancy.entity';
+import { Repository } from 'typeorm';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class VacancyService {
-  create(createVacancyDto: CreateVacancyDto) {
-    return 'This action adds a new vacancy';
-  }
+    constructor(
+        @InjectRepository(Vacancy)
+        private vacancyRepository: Repository<Vacancy>,
+        private userService: UserService,
+    ) {}
 
-  findAll() {
-    return `This action returns all vacancy`;
-  }
+    async createVacancy(vacancy: CreateVacancyDto, userId : number) {
+        try {
+            const user = await this.userService.findOne(userId);
+            const newVacancy = this.vacancyRepository.create(vacancy);
 
-  findOne(id: number) {
-    return `This action returns a #${id} vacancy`;
-  }
+            newVacancy.advertiserId = user;
 
-  update(id: number, updateVacancyDto: UpdateVacancyDto) {
-    return `This action updates a #${id} vacancy`;
-  }
+            await this.vacancyRepository.save(newVacancy)
 
-  remove(id: number) {
-    return `This action removes a #${id} vacancy`;
-  }
+            return newVacancy
+        }
+        catch (error) {
+            console.error(error);
+            throw new HttpException(
+                error.message,
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+
+    async findVacancyById(filter: { id: number, userName: string }) {
+        try {
+            const vacancy = await this.vacancyRepository.findOneOrFail({
+                where: {
+                    id: filter.id,
+                },
+                relations : ['advertiserId']
+            })
+            if(vacancy.advertiserId.name.toLowerCase().trim() !== filter.userName.toLowerCase().trim()){
+                console.log("fails");
+                throw new NotFoundException("Vacancy not found");          
+            }
+            return vacancy;
+        } catch (error) {
+            console.log(error)
+            throw new HttpException(
+                error.message,
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            )
+        }
+    }
+
+    async findVacancies(filter : updateVacancyDto) {
+
+        try {
+            const vacancies = await this.vacancyRepository.find({
+                where: filter
+            });
+            return vacancies;
+        } catch (error){
+            console.log(error)
+            throw new HttpException(
+                error.message,
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            )
+        }
+    }
+
+    async updateVacancy(id: number, payload: updateVacancyDto) {
+        try {
+            const vacancy = await this.vacancyRepository.findOneOrFail({
+                where: {
+                    id: id
+                },
+            });
+            const newVacancy = await this.vacancyRepository.update(id, payload);
+            return newVacancy;
+        }
+        catch (error) {
+            console.log(error);
+            throw new HttpException(
+                error.message,
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+        }
+    }
+    async deleteVacancy(id : number){
+        try{
+            const vacancy = await this.vacancyRepository.delete(id)
+
+            return vacancy
+        }
+        catch(error){
+            console.log(error)
+            throw new HttpException(
+                error.message,
+                error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+            )
+        }
+    }
 }
