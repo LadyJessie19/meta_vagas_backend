@@ -6,22 +6,22 @@ export class Company {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: 'varchar', length: 64, nullable: false, unique: true })
+  @Column({ type: 'varchar', length: 64, nullable: true, unique: true })
   name: string;
 
-  @Column({ type: 'varchar', length: 128, nullable: false })
+  @Column({ type: 'varchar', length: 128, nullable: true })
   city: string;
 
-  @Column({ type: 'varchar', length: 128, nullable: false })
+  @Column({ type: 'varchar', length: 128, nullable: true })
   state: string;
 
-  @Column({ type: 'varchar', length: 128, nullable: false })
+  @Column({ type: 'varchar', length: 128, nullable: true })
   address: string;
 
-  @Column({ type: 'date', nullable: false })
+  @Column({ type: 'date', nullable: true })
   foundedAt: Date;
 
-  @Column({ type: 'text', nullable: false })
+  @Column({ type: 'text', nullable: true })
   description: string;
 
   // @OneToMany(() => Vacancy, (vacancy) => vacancy.company)
