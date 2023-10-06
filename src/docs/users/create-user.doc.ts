@@ -1,35 +1,29 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { RoleEnum } from "../../enums/user-roles.enum";
 
-//This is meant to be used as an example to the documentation
-
-export class CreateSubjectDoc {
+export class CreateUserDoc {
   @ApiProperty({
-    example: 'Física 1',
+    example: 'Caio Henrique',
   })
-  subjectName: string;
-
-  @ApiProperty({
-    example: 12000,
-  })
-  code: number;
+  name: string;
 
   @ApiProperty({
-    example: 'Aqui você aprenderá movimento retilíneo uniforme.',
+    example: 'caio@gmail.com',
   })
-  description: string;
+  email: string;
 
   @ApiProperty({
-    example: 10,
+    example: '123456',
   })
-  credits: number;
+  password: string;
 
   @ApiProperty({
-    example: 'Santa Mônica',
+    example: 'admin',
   })
-  campus: string;
+  role?: RoleEnum;
 
   @ApiProperty({
-    example: 'Sala 101 bloco A',
+    example: true,
   })
-  classRoom: string;
+  isActive?: boolean;
 }

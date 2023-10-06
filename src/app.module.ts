@@ -1,17 +1,26 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
-import { UsersModule } from './users/users.module';
-import { VacancyModule } from './vacancy/vacancy.module';
-import { CompanyModule } from './company/company.module';
-import { TecnologyModule } from './tecnology/tecnology.module';
+
+import { DatabaseModule } from './database/database.module';
+import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { VacancyModule } from './vacancy/vacancy.module';
+import { TecnologyModule } from './tecnology/tecnology.module';
+import { CompanyModule } from './company/company.module';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), DatabaseModule, UsersModule, VacancyModule, CompanyModule, TecnologyModule, AuthModule],
-  controllers: [AppController],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    DatabaseModule,
+    VacancyModule,
+    UserModule,
+    AuthModule,
+    TecnologyModule,
+    CompanyModule,
+  ],
   providers: [AppService],
+  controllers: [AppController],
 })
 export class AppModule {}
