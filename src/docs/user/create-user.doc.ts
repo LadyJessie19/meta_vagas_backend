@@ -18,7 +18,7 @@ export class CreateUserDoc {
   password: string;
 
   @ApiProperty({
-    example: 'admin',
+    example: 'ADMIN',
   })
   role?: RoleEnum;
 

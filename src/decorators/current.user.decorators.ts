@@ -1,6 +1,6 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 import { User } from '../database/entities/user.entity';
-import { currentUserMock } from '../testing/current.user.mock';
+import { currentUserMock } from '../testing/user.current.mock';
 
 export const getCurrentUserByContext = (context: ExecutionContext): User => {
   if (process.env.NODE_ENV == 'test') {
