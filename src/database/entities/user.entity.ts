@@ -46,8 +46,8 @@ export class User {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  // @OneToMany(() => Vacancy, (vacancy) => vacancy.user)
-  // vacancy: Vacancy[];
+  @OneToMany(() => Vacancy, (vacancy) => vacancy.advertiserId)
+  vacancy: Vacancy[];
 
   @BeforeInsert()
   @BeforeUpdate()

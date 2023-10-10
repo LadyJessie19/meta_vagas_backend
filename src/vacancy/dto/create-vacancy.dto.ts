@@ -1,5 +1,5 @@
 import { IsNumber, IsString, IsNotEmpty, IsDate} from "class-validator";
-import { User } from "src/data-base/entities/user.entity";
+import { User } from "../../database/entities/user.entity";
 
 export class CreateVacancyDto{
     

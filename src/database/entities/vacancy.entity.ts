@@ -10,7 +10,7 @@ import {
   import { User } from './user.entity';
 import { flatten } from '@nestjs/common';
   
-  @Entity('vacancy')
+  @Entity('vacancies')
   export class Vacancy {
     @PrimaryGeneratedColumn()
     id: number;

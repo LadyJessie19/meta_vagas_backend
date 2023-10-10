@@ -9,7 +9,7 @@ import {
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { updateVacancyDto } from './dto/update-vacancy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Vacancy } from 'src/data-base/entities/vacancy.entity';
+import { Vacancy } from '../database/entities/vacancy.entity';
 import { Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 

@@ -14,13 +14,13 @@ import {
     HttpStatus,
 } from '@nestjs/common';
 import { VacancyService } from './vacancy.service';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import { updateVacancyDto } from './dto/update-vacancy.dto';
-import { AuthGuard } from 'src/guards/auth.guards';
+import { AuthGuard } from '../auth/guards/auth.guards';
 import { filter } from 'rxjs';
 
 @UseGuards(AuthGuard)
-@Controller('vacancy')
+@Controller('vacancies')
 export class VacancyController {
     constructor(
         private readonly vacancyService: VacancyService,
