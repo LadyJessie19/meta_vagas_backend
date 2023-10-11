@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { userServiceMock } from '../testing/user.service.mock';
-import { AuthGuard } from '';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { authGuardMock } from '../testing/auth.guard.mock';
 import { createUserMock } from '../testing/user.create.mock';
 import { userListMock } from '../testing/user.list.mock';
@@ -18,7 +18,7 @@ describe('UsersController', () => {
       controllers: [UserController],
       providers: [userServiceMock],
     })
-      .overrideGuard(AuthGuard)
+      .overrideGuard(RolesGuard)
       .useValue(authGuardMock)
       .compile();
 
@@ -89,7 +89,7 @@ describe('UsersController', () => {
       );
 
       expect(guards.length).toEqual(1);
-      expect(new guards[0]()).toBeInstanceOf(AuthGuard);
+      expect(new guards[0]()).toBeInstanceOf(RolesGuard);
     });
   });
 });

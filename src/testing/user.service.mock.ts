@@ -8,5 +8,6 @@ export const userServiceMock = {
     create: jest.fn().mockReturnValue(userListMock[0]),
     findById: jest.fn().mockResolvedValue(userListMock[0]),
     findByEmail: jest.fn().mockResolvedValue(userFoundByMailMock),
+    update: jest.fn().mockResolvedValue(userListMock[0]),
   },
 };

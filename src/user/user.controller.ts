@@ -18,7 +18,7 @@ import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
 import { CurrentUser } from '../decorators/current.User.decorators';
 import { CurrentUserDto } from './dto/current-user.dto';
-import { AuthGuard } from '';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
 @ApiTags('user')
 @Controller('user')
@@ -35,37 +35,37 @@ export class UserController {
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Get()
   async findAll() {
     return this.userService.findAll();
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Get(':id/profile')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
   @ApiBasicAuth()
   @Get('profile')
   async getProfile(@CurrentUser() currentUser: CurrentUserDto) {
     return this.userService.findById(currentUser.sub);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
   @Delete(':id/soft-delete')
   async remove(@Param('id') id: string) {
     return await this.userService.remove(+id);
   }
-  @UseGuards(AuthGuard)
+  @UseGuards(RolesGuard)
   @Post(':id/restore')
   async restore(@Param('id') id: string) {
     return await this.userService.restore(+id);
