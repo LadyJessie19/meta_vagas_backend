@@ -22,17 +22,48 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Projeto-Meta_Vagas_Backend
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+##Descrição
 
-## Installation
+Este repositório foi feito como projeto final do módulo 4 da Arnia, escola de progamação da qual fazemos parte, com intuito de adquirirmos mais experiência na área, e como um desafio sobre os conteúdos dos quais foram lecionados em sala de aula.
+A presente aplicação possui foco no registros de candidatos, registros de vagas e registros das empresas anunciantes das vagas.
+Possui também role para melhor controle de quem tem permissão para acesso a determinadas rotas.
+Além disso a aplicação toda arquitetada por camadas, possui diversas rotas com funcionalidades, autorização, autenticação de rotas privadas, busca de vagas baseado nas tecnologias,  e testes  
+unitários com Jest.
+
+##Tecnologias
+
+- Nest.js
+- SQL postgres
+- TypeScript
+- Jest
+- Bcrypt
+- JsonWebToken
+
+##Estrutura do Projeto
+
+Diagrama de entidade e relacionamento:
+
+![editada](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/baa1344e-3cb1-42e4-b210-0d425c211f9e)
+
+##Instalação
+
+Crie seu próprio .env !!!
 
 ```bash
-$ npm install
+cp .env.example .env
 ```
 
-## Running the app
+Defina seus valores !!!
+
+Instale as dependências do projeto !!!
+
+```bash
+yarn ou npm install
+```
+
+##Rodando o projeto
 
 ```bash
 # development
@@ -45,29 +76,15 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+##Rodando os testes
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm test '+nome do arquivo rodado entre aspas'
 ```
 
-## Support
+##URL do Deploy
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Para o deploy foi utilizado a plataforma [render](https://render.com/).
 
-## Stay in touch
+[URL BASE]().
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

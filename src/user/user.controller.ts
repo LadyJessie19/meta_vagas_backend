@@ -6,20 +6,22 @@ import {
   Param,
   Patch,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBasicAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserEntityDoc } from '../docs/users/user-entity.doc';
-import { CreateUserDoc } from '../docs/users/create-user.doc';
+import { UserEntityDoc } from '../docs/user/user-entity.doc';
+import { CreateUserDoc } from '../docs/user/create-user.doc';
+import { RoleEnum } from '../enums/user-roles.enum';
+import { Roles } from '../decorators/role.decorators';
+import { CurrentUser } from '../decorators/current.User.decorators';
 import { CurrentUserDto } from './dto/current-user.dto';
-import { Roles } from 'src/decorators/role.decorators';
-import { RoleEnum } from 'src/enums/user-roles.enum';
-import { CurrentUser } from 'src/decorators/current.user.decorators';
+import { RolesGuard } from '../auth/guards/roles.guard';
 
-@ApiTags('User')
-@Controller('users')
+@ApiTags('user')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -31,39 +33,41 @@ export class UserController {
   })
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
-    return await this.userService.create(createUserDto);
+    return this.userService.create(createUserDto);
   }
-
+  @UseGuards(RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Get()
-  findAll() {
+  async findAll() {
     return this.userService.findAll();
   }
-
+  @UseGuards(RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Get(':id/profile')
-  findOne(@Param('id') id: string) {
+  async findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
   }
 
+  @UseGuards(RolesGuard)
   @ApiBasicAuth()
   @Get('profile')
   async getProfile(@CurrentUser() currentUser: CurrentUserDto) {
-    return await this.userService.findById(currentUser.sub);
+    return this.userService.findById(currentUser.sub);
   }
 
+  @UseGuards(RolesGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
-
+  @UseGuards(RolesGuard)
   @Delete(':id/soft-delete')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  async remove(@Param('id') id: string) {
+    return await this.userService.remove(+id);
   }
-
+  @UseGuards(RolesGuard)
   @Post(':id/restore')
-  restore(@Param('id') id: string) {
-    return this.userService.restore(+id);
+  async restore(@Param('id') id: string) {
+    return await this.userService.restore(+id);
   }
 }

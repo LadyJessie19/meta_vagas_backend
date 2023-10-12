@@ -99,7 +99,7 @@ export class UserService {
     try {
       const user = await this.userRepository.findOneByOrFail({ id });
 
-      return user;
+      return {...user};
     } catch (error) {
       throw new NotFoundException();
     }
@@ -121,11 +121,19 @@ export class UserService {
         user.role = updateUserDto.role;
       }
 
+      if ('isActive' in updateUserDto) {
+        user.isActive = updateUserDto.isActive;
+      }
+
+      if ('password' in updateUserDto) {
+        user.password = updateUserDto.password;
+      }
+
       await this.userRepository.save(user);
 
       return user;
     } catch (error) {
-      throw new HttpException(
+      throw new BadRequestException(
         error.message || 'Server error',
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
