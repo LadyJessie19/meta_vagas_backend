@@ -7,8 +7,6 @@ import { createUserMock } from '../testing/user.create.mock';
 import { userListMock } from '../testing/user.list.mock';
 import { currentUserMock } from '../testing/user.current.mock';
 import { updateUserMock } from '../testing/user.update.mock';
-import { removeUserMock } from '../testing/user.remove.mock';
-import { restoreUserMock } from '../testing/user.restore.mock';
 
 describe('UsersController', () => {
   let userController: UserController;
@@ -38,38 +36,43 @@ describe('UsersController', () => {
   });
 
   describe('update', () => {
-    it('Should update a user by ID', async () => {
+    it('Should update a user', async () => {
       const userId = '1';
+      const result = await userController.update(userId, updateUserMock);
 
-      const updateUserDto = {
-        name: 'Caio',
-        email: 'teste@gmail.com',
-        password: '123456',
-      };
-
-      const result = await userController.update(userId, updateUserDto);
-
-      expect(result).toEqual(updateUserMock);
+      expect(result).toEqual(userListMock[0]);
     });
   });
 
   describe('remove', () => {
-    it('Should remove a user by ID', async () => {
+    it('Should soft-delete a user', async () => {
       const userId = '1';
+
+      userServiceMock.useValue.remove.mockResolvedValue({
+        message: 'User soft-deleted successfully',
+      });
 
       const result = await userController.remove(userId);
 
-      expect(result).toEqual(removeUserMock);
+      expect(result).toEqual({
+        message: 'User soft-deleted successfully',
+      });
     });
   });
 
   describe('restore', () => {
-    it('Should restore a soft-deleted user by ID', async () => {
-      const userId = '1';
+    it('Should restore a soft-deleted user', async () => {
+      const userId = '1'; 
+
+      userServiceMock.useValue.restore.mockResolvedValue({
+        message: 'User restored successfully',
+      });
 
       const result = await userController.restore(userId);
 
-      expect(result).toEqual(restoreUserMock);
+      expect(result).toEqual({
+        message: 'User restored successfully',
+      });
     });
   });
 
