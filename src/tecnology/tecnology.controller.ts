@@ -17,7 +17,7 @@ export class TecnologyController {
   async create(@Body() createTecnologyDto: CreateTecnologyDto) {
     return await this.tecnologyService.create(createTecnologyDto);
   }
-
+  // Essa rota é publica!
   @Get()
   async findAll() {
     return await this.tecnologyService.findAll();

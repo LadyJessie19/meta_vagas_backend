@@ -18,8 +18,8 @@ export class Company {
   @Column({ type: 'varchar', length: 128, nullable: false })
   address: string;
 
-  @Column({ type: 'date', nullable: false })
-  foundedAt: Date;
+  @Column({ type: 'varchar', nullable: true })
+  foundedAt: string;
 
   @Column({ type: 'text', nullable: true })
   description: string;

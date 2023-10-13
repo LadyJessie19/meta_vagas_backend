@@ -18,7 +18,7 @@ export class JwtInterceptor implements NestInterceptor {
     const bearerToken = request.headers.authorization;
 
     const [, token] = bearerToken?.split(' ') ?? [];
-
+    console.log(token);
     if (token) {
       try {
         const user = jwt.verify(token, process.env.JWT_SECRET);
