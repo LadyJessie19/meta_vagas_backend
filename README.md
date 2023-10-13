@@ -27,10 +27,12 @@
 ##Descrição
 
 Este repositório foi feito como projeto final do módulo 4 da Arnia, escola de progamação da qual fazemos parte, com intuito de adquirirmos mais experiência na área, e como um desafio sobre os conteúdos dos quais foram lecionados em sala de aula.
+
 A presente aplicação possui foco no registros de candidatos, registros de vagas e registros das empresas anunciantes das vagas.
+
 Possui também role para melhor controle de quem tem permissão para acesso a determinadas rotas.
-Além disso a aplicação toda arquitetada por camadas, possui diversas rotas com funcionalidades, autorização, autenticação de rotas privadas, busca de vagas baseado nas tecnologias,  e testes  
-unitários com Jest.
+
+Além disso a aplicação toda arquitetada por camadas, possui diversas rotas com funcionalidades, autorização, autenticação de rotas privadas, busca de vagas baseado nas tecnologias, e testes unitários com Jest.
 
 ##Tecnologias
 
