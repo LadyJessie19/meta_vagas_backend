@@ -12,11 +12,6 @@ export class Tecnology {
   @Column({ type: 'varchar', length: 64, nullable: false })
   creatorsName: string;
 
-  // @ManyToMany(() => Vacancy, (vacancy) => vacancy.technologies)
-  // vacancies: Vacancy[];
-
-  //At Vacancy entity i should use this:
-  //@ManyToMany(() => Technology, (technology) => technology.vacancies)
-  //@JoinTable()
-  //technologies: Technology[];
+  @ManyToMany(() => Vacancy, (vacancy) => vacancy.technologies)
+  vacancies: Vacancy[];
 }

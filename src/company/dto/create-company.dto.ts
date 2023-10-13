@@ -1,28 +1,27 @@
-import { IsDate, IsNotEmpty, IsString } from "class-validator"
+import { IsDate, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCompanyDto {
-    @IsNotEmpty()
-    @IsString()
-    name: string;
+  @IsNotEmpty()
+  @IsString()
+  name: string;
 
-    @IsNotEmpty()
-    @IsString()
-    city: string;
+  @IsNotEmpty()
+  @IsString()
+  city: string;
 
-    @IsNotEmpty()
-    @IsString()
-    state: string;
+  @IsNotEmpty()
+  @IsString()
+  state: string;
 
-    @IsNotEmpty()
-    @IsString()
-    address: string;
+  @IsNotEmpty()
+  @IsString()
+  address: string;
 
-    @IsNotEmpty()
-    // @IsDate()
-    @IsString()
-    foundedAt: String;
+  @IsNotEmpty()
+  @IsDate()
+  foundedAt: String;
 
-    @IsNotEmpty()
-    @IsString()
-    description: string;
+  @IsNotEmpty()
+  @IsString()
+  description: string;
 }

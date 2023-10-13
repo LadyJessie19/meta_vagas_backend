@@ -24,10 +24,6 @@ export class Company {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  // @OneToMany(() => Vacancy, (vacancy) => vacancy.company)
-  // vacancies: Vacancy[];
-
-  //At Vacancy i must add this:
-  //@ManyToOne(() => Company, (company) => company.vacancies)
-  //company: Company;
+  @OneToMany(() => Vacancy, (vacancy) => vacancy.company)
+  vacancies: Vacancy[];
 }

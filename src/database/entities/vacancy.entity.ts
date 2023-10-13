@@ -1,48 +1,56 @@
 import {
-    Column,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-    CreateDateColumn,
-    UpdateDateColumn,
-    JoinColumn,
-  } from 'typeorm';
-  import { User } from './user.entity';
-import { flatten } from '@nestjs/common';
-  
-  @Entity('vacancies')
-  export class Vacancy {
-    @PrimaryGeneratedColumn()
-    id: number;
-  
-    @Column({ type: 'int', nullable: false })
-    wage: number;
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
+import { User } from './user.entity';
+import { Tecnology } from './tecnology.entity';
+import { Company } from './company.entity';
 
-    @Column({ nullable: false })
-    location: string;
+@Entity('vacancies')
+export class Vacancy {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ nullable : false})
-    vacancyRole : string;
+  @Column({ type: 'int', nullable: false })
+  wage: number;
 
-    @Column({ nullable : false})
-    vacancyType : string
+  @Column({ nullable: false })
+  location: string;
 
-    @Column({ nullable : false})
-    vacancyDescription : string;
+  @Column({ nullable: false })
+  vacancyRole: string;
 
-    @Column({ nullable : false})
-    level : string;
+  @Column({ nullable: false })
+  vacancyType: string;
 
-    @Column({ nullable : false})
-    companyId : number;
+  @Column({ nullable: false })
+  vacancyDescription: string;
 
-    @ManyToOne(() => User, (user) => user.vacancy)
-    @JoinColumn()
-    advertiserId: User;
+  @Column({ nullable: false })
+  level: string;
 
-    @CreateDateColumn()
-    createdAt: Date;
-  
-    @UpdateDateColumn()
-    updatedAt: Date;
-  }
+  @Column({ nullable: false })
+  companyId: number;
+
+  @ManyToOne(() => User, (user) => user.vacancies)
+  advertiserId: User;
+
+  @ManyToOne(() => Company, (company) => company.vacancies)
+  company: Company;
+
+  @ManyToMany(() => Tecnology, (technology) => technology.vacancies)
+  @JoinTable()
+  technologies: Tecnology[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}

@@ -4,6 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -26,7 +27,12 @@ export class User {
   @IsEmail()
   email: string;
 
-  @Column({ type: 'character varying', nullable: false, select: false })
+  @Column({
+    type: 'character varying',
+    length: 64,
+    nullable: true,
+    select: false,
+  })
   password: string;
 
   @Column({ type: 'bool', default: true })
@@ -47,15 +53,14 @@ export class User {
   updatedAt: Date;
 
   @OneToMany(() => Vacancy, (vacancy) => vacancy.advertiserId)
-  vacancy: Vacancy[];
+  @JoinColumn({ name: 'user_id', referencedColumnName: 'id' })
+  vacancies: Vacancy[];
 
   @BeforeInsert()
   @BeforeUpdate()
-  public async passwordHash(password: string) {
+  public async passwordHash() {
     try {
-      if (password || this.password) {
-        this.password = await bcrypt.hash(password || this.password, 10);
-      }
+      this.password = await bcrypt.hash(this.password, 10);
     } catch (error) {
       throw new InternalServerErrorException('Error on password hash.');
     }
