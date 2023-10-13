@@ -24,7 +24,7 @@ export class UserService {
       const userExist = await this.findUserByEmail(createUserDto.email);
 
       if (!!userExist) {
-        throw new BadRequestException();
+        throw new BadRequestException('This email is already being used.');
       }
 
       const newUser = this.userRepository.create(createUserDto);
@@ -48,11 +48,7 @@ export class UserService {
         where: {
           email: email,
         },
-        select: {
-          id: true,
-          email: true,
-          password: false,
-        },
+        select: ['id', 'email', 'password', 'isActive', 'role'],
       });
 
       return user;
@@ -99,7 +95,7 @@ export class UserService {
     try {
       const user = await this.userRepository.findOneByOrFail({ id });
 
-      return {...user};
+      return { ...user };
     } catch (error) {
       throw new NotFoundException();
     }
