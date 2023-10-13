@@ -125,7 +125,7 @@ export class UserService {
         user.password = updateUserDto.password;
       }
 
-      await this.userRepository.save(user);
+      // await this.userRepository.save(user);
 
       return user;
     } catch (error) {

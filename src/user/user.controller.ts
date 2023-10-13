@@ -15,7 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBasicAuth, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
-import { CurrentUser } from '../decorators/current.User.decorators';
+import { CurrentUser, TokenUser } from '../decorators/current.User.decorators';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '../auth/guards/auth.guards';
@@ -32,9 +32,9 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseInterceptors(JwtInterceptor)
-  @UseGuards(RolesGuard)
-  @Roles(RoleEnum.ADMIN)
+  @UseInterceptors(JwtInterceptor) //This is getting the token from the context headers authorization
+  @UseGuards(RolesGuard, AuthGuard)
+  @Roles(RoleEnum.ADMIN) //This is seting the ROLES_KEYS as admin role
   @Get()
   async findAll() {
     return this.userService.findAll();
@@ -55,16 +55,25 @@ export class UserController {
     return this.userService.findById(currentUser.sub);
   }
 
+  @UseInterceptors(JwtInterceptor)
   @UseGuards(RolesGuard)
+  @Roles(RoleEnum.ADMIN)
   @Patch(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @TokenUser() currentUser: CurrentUserDto,
+  ) {
+    console.log(currentUser);
     return this.userService.update(+id, updateUserDto);
   }
+
   @UseGuards(RolesGuard)
   @Delete(':id/soft-delete')
   async remove(@Param('id') id: string) {
     return await this.userService.remove(+id);
   }
+
   @UseGuards(RolesGuard)
   @Post(':id/restore')
   async restore(@Param('id') id: string) {

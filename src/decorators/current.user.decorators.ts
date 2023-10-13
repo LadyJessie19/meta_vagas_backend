@@ -16,3 +16,11 @@ export const CurrentUser = createParamDecorator(
   (_data: unknown, context: ExecutionContext) =>
     getCurrentUserByContext(context),
 );
+
+export const TokenUser = createParamDecorator(
+  (data: unknown, context: ExecutionContext) => {
+    console.log('Chegou no TokenUser decorator');
+    const request = context.switchToHttp().getRequest();
+    return request.user;
+  },
+);
