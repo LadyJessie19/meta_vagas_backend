@@ -7,40 +7,40 @@ import {
   Patch,
   Delete,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { ApiBasicAuth, ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserEntityDoc } from '../docs/user/user-entity.doc';
-import { CreateUserDoc } from '../docs/user/create-user.doc';
+import { ApiBasicAuth, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
 import { CurrentUser } from '../decorators/current.User.decorators';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
+import { AuthGuard } from '../auth/guards/auth.guards';
+import { JwtInterceptor } from '../auth/jwt/jwt.interceptor';
 
-@ApiTags('user')
-@Controller('user')
+@ApiTags('User')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @ApiBody({
-    type: CreateUserDoc,
-  })
-  @ApiResponse({
-    type: UserEntityDoc,
-  })
+  @ApiExcludeEndpoint()
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
+
+  @UseInterceptors(JwtInterceptor)
   @UseGuards(RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Get()
   async findAll() {
     return this.userService.findAll();
   }
+
+  @UseInterceptors(JwtInterceptor)
   @UseGuards(RolesGuard)
   @Roles(RoleEnum.ADMIN)
   @Get(':id/profile')

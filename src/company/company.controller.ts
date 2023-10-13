@@ -4,8 +4,8 @@ import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { RoleEnum } from 'src/enums/role.enum';
-import { Roles } from 'src/decorators/roles.decorator';
+import { RoleEnum } from 'src/enums/user-roles.enum';
+import { Roles } from 'src/decorators/role.decorators';
 
 @ApiTags('Company')
 @UseGuards(RolesGuard)
