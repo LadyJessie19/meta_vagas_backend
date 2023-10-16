@@ -12,7 +12,6 @@ export class CompanyService {
     private readonly repository: Repository<Company>,
   ) {}
 
-
   async create(createCompanyDto: CreateCompanyDto): Promise<Company> {
     try {
       const newCompany = this.repository.create(createCompanyDto);
@@ -26,20 +25,27 @@ export class CompanyService {
     }
   }
 
+  async findAll(page: number, size: number, name: string): Promise<Company[]> {
+    const skip = (page - 1) * size;
+    const query = this.repository.createQueryBuilder('company');
 
-  async findAll(): Promise<Company[]> {
-    return await this.repository.find();
+    if (name) {
+      query.where('LOWER(company.name) ILIKE :name', {
+        name: `%${name.toLowerCase()}%`,
+      });
+    }
+
+    return await query.skip(skip).take(size).getMany();
   }
 
-  async findOne(id: number) {
+  async findOne(companyId: number) {
     try {
-      const companyFound = await this.repository.findOneBy({ id });
+      const queryBuilder = this.repository
+        .createQueryBuilder('company')
+        .where('company.id = :companyId', { companyId })
+        .leftJoinAndSelect('company.vacancies', 'vacancy');
 
-      if (!companyFound) {
-        throw new NotFoundException('company with this id not found.');
-      }
-
-      return companyFound;
+      return await queryBuilder.getOne();
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
@@ -50,7 +56,7 @@ export class CompanyService {
 
   async update(id: number, updateCompanyDto: UpdateCompanyDto) {
     try {
-      await this.repository.findOneByOrFail({ id })
+      await this.repository.findOneByOrFail({ id });
 
       await this.repository.update({ id }, updateCompanyDto);
 
