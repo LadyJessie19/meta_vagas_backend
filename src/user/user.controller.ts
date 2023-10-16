@@ -15,7 +15,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBasicAuth, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
 import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
-import { CurrentUser, TokenUser } from '../decorators/current.User.decorators';
+import { CurrentUser } from '../decorators/current.User.decorators';
 import { CurrentUserDto } from './dto/current-user.dto';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '../auth/guards/auth.guards';
