@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  app:
+    image: nestjs-postgresql
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+  db:
+    image: postgres
+    environment:
+      POSTGRES_HOST: postgresql://postgres:MiOKIscW0EO1ZIw1MOMb@containers-us-west-115.railway.app:6796/railway
+      POSTGRES_PORT: 6796
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: MiOKIscW0EO1ZIw1MOMb
+      POSTGRES_DB: railway
