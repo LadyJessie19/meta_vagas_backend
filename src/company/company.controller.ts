@@ -36,7 +36,7 @@ export class CompanyController {
     return this.companyService.update(+id, updateCompanyDto);
   }
 
-  @Roles(RoleEnum.ADMIN)
+  // @Roles(RoleEnum.ADMIN)
   @Get()
   findAll(
     @Query('page') page: number = 1,
