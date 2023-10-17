@@ -17,14 +17,13 @@ export class AuthController {
   @ApiResponse({
     type: UserEntityDoc,
   })
-  @Post()
   @Post('register')
-  register(@Body() user: CreateUserDto) {
+  async register(@Body() user: CreateUserDto) {
     return this.authService.register(user);
   }
 
   @Post('login')
-  login(@Body() auth: LoginAuthDto) {
+  async login(@Body() auth: LoginAuthDto) {
     return this.authService.login(auth);
   }
 }

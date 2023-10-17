@@ -1,10 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import {
-  HttpException,
-  HttpStatus,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { LoginAuthDto } from './dto/login-auth.dto';
@@ -35,28 +30,36 @@ export class AuthService {
     }
   }
 
-  async login(loginAuthDto: LoginAuthDto) {
+  async login(loginAuth: LoginAuthDto) {
     try {
-      const user = await this.userService.findUserByEmail(loginAuthDto.email);
+      const userFound = await this.userService.findUserByEmail(loginAuth.email);
 
-      if (!user) {
-        throw new NotFoundException("This user wasn't found at the database");
+      if (
+        !userFound ||
+        !(await bcrypt.compare(loginAuth.password, userFound.password))
+      ) {
+        throw new UnauthorizedException(
+          'This user wasnt found at the database',
+        );
       }
 
-      if (!(await bcrypt.compare(loginAuthDto.password, user.password))) {
-        throw new UnauthorizedException('Wrong credentials.');
-      }
+      const tokenPayload = {
+        user: userFound.id,
+        email: userFound.email,
+        role: userFound.role,
+        isActive: userFound.isActive,
+      };
 
-      const payload = { sub: user.id, email: user.email, role: user.role };
-
-      const token = await this.jwtService.signAsync(payload);
-
-      return { access_token: token };
+      return {
+        data: { email: userFound.email, isActive: userFound.isActive },
+        token: await this.jwtService.signAsync(tokenPayload),
+      };
     } catch (error) {
       console.log(error);
+
       throw new HttpException(
-        error.message,
-        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
+        error.message || 'Internal server error',
+        error.status || 500,
       );
     }
   }
