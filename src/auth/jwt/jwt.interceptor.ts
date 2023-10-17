@@ -13,12 +13,11 @@ config();
 @Injectable()
 export class JwtInterceptor implements NestInterceptor {
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    console.log('Chegou no interceptor');
     const request = context.switchToHttp().getRequest();
     const bearerToken = request.headers.authorization;
 
     const [, token] = bearerToken?.split(' ') ?? [];
-    console.log(token);
+
     if (token) {
       try {
         const user = jwt.verify(token, process.env.JWT_SECRET);
@@ -26,6 +25,8 @@ export class JwtInterceptor implements NestInterceptor {
       } catch (error) {
         throw new UnauthorizedException('Unauthorized: JWT error');
       }
+    } else {
+      throw new UnauthorizedException('token invalid');
     }
 
     return next.handle();
