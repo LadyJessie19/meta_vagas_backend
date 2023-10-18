@@ -7,6 +7,7 @@ import { createUserMock } from '../testing/user.create.mock';
 import { userListMock } from '../testing/user.list.mock';
 import { currentUserMock } from '../testing/user.current.mock';
 import { updateUserMock } from '../testing/user.update.mock';
+import { AuthGuard } from '../auth/guards/auth.guards';
 
 describe('UsersController', () => {
   let userController: UserController;
@@ -17,6 +18,8 @@ describe('UsersController', () => {
       providers: [userServiceMock],
     })
       .overrideGuard(RolesGuard)
+      .useValue(RolesGuard)
+      .overrideGuard(AuthGuard)
       .useValue(authGuardMock)
       .compile();
 
