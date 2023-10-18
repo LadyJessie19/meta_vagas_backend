@@ -93,10 +93,13 @@ export class VacancyService {
           new Brackets((qb) => {
             qb.where('vacancy.vacancyDescription ILIKE :role', {
               role: `%${role?.trim()}%`,
-            }).orWhere('vacancy.vacancyRole ILIKE :role', {
-              role: `%${role?.trim()}%`,
-            });
-            //.orWhere(":tech IN vacancy.technology", {tech : `%${tech.trim()}%`})
+            })
+              .orWhere('vacancy.vacancyRole ILIKE :role', {
+                role: `%${role?.trim()}%`,
+              })
+              .orWhere(':tech IN vacancy.technologies', {
+                tech: `%${tech.trim()}%`,
+              });
           }),
         )
         .skip((page - 1) * limit)
