@@ -11,8 +11,8 @@ services:
   db:
     image: postgres
     environment:
-      POSTGRES_HOST: postgresql://postgres:MiOKIscW0EO1ZIw1MOMb@containers-us-west-115.railway.app:6796/railway
-      POSTGRES_PORT: 6796
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: MiOKIscW0EO1ZIw1MOMb
-      POSTGRES_DB: railway
+      POSTGRES_HOST: ${DOCKER_HOST}
+      POSTGRES_PORT: ${DOCKER_PORT}
+      POSTGRES_USER: ${DOCKER_USER}
+      POSTGRES_PASSWORD: ${DOCKER_PASSWORD}
+      POSTGRES_DB: ${DOCKER_DATABASE}

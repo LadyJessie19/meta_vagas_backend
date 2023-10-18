@@ -25,8 +25,6 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
-  app.useGlobalInterceptors(new JwtInterceptor());
-
   await app.listen(configService.get('APP_PORT') || 3001);
 }
 bootstrap();
