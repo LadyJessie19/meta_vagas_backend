@@ -11,13 +11,14 @@ import { updateVacancyDto } from './dto/update-vacancy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vacancy } from '../database/entities/vacancy.entity';
 import { Brackets, Repository } from 'typeorm';
-import { UserService } from '../user/user.service';
+import { UserService } from 'src/user/user.service';
+import * as xlsx from 'xlsx';
 
 @Injectable()
 export class VacancyService {
   constructor(
     @InjectRepository(Vacancy)
-    private vacancyRepository: Repository<Vacancy>,
+    private readonly vacancyRepository: Repository<Vacancy>,
     private userService: UserService,
   ) {}
 
@@ -150,5 +151,28 @@ export class VacancyService {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async criarVagasAPartirDeXLSX(fileBuffer: Buffer): Promise<Vacancy[]> {
+    const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+
+    const vacancies: Vacancy[] = data.map((row: any) => {
+      const vacancy = new Vacancy();
+
+      vacancy.vacancyRole = row.vacancyRole;
+      vacancy.wage = row.wage;
+      vacancy.location = row.location;
+      vacancy.vacancyType = row.vacancyType;
+      vacancy.vacancyDescription = row.vacancyDescription;
+      vacancy.level = row.level;
+      vacancy.companyId = row.companyId;
+
+      return vacancy;
+    });
+
+    return this.vacancyRepository.save(vacancies);
   }
 }
