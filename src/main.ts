@@ -18,12 +18,12 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, configOptions);
-  SwaggerModule.setup('/docs', app, document);
+  SwaggerModule.setup('v1/docs', app, document);
 
-  // app.setGlobalPrefix('v1/');
+  app.setGlobalPrefix('v1/');
 
   app.useGlobalPipes(new ValidationPipe());
 
-  await app.listen(configService.get('APP_PORT') || 3001);
+  await app.listen(configService.get('PORT') || 3001, '0.0.0.0');
 }
 bootstrap();
