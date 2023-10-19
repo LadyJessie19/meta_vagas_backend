@@ -1,14 +1,13 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateTecnologyDto } from './dto/create-tecnology.dto';
-import { Tecnology } from 'src/database/entities/tecnology.entity';
-import { TecnologyRepository } from './tecnology.repository';
+import { Tecnology } from '../database/entities/tecnology.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class TecnologyService {
   constructor(
-    @InjectRepository(TecnologyRepository)
+    @InjectRepository(Tecnology)
     private readonly repository: Repository<Tecnology>,
   ) {}
 

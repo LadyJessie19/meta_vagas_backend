@@ -1,9 +1,7 @@
 import {
-  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
-  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateVacancyDto } from './dto/create-vacancy.dto';
@@ -12,8 +10,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Vacancy } from '../database/entities/vacancy.entity';
 import { Brackets, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
-import { CompanyService } from 'src/company/company.service';
-import { TecnologyService } from 'src/tecnology/tecnology.service';
+import { CompanyService } from '../company/company.service';
+import { TecnologyService } from '../tecnology/tecnology.service';
 
 @Injectable()
 export class VacancyService {

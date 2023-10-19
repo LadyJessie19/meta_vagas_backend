@@ -2,14 +2,13 @@ import { HttpException, Injectable } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { Company } from '../database/entities/company.entity';
 import { UpdateCompanyDto } from './dto/update-company.dto';
-import { CompanyRepository } from './company.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class CompanyService {
   constructor(
-    @InjectRepository(CompanyRepository)
+    @InjectRepository(Company)
     private readonly repository: Repository<Company>,
   ) {}
 
