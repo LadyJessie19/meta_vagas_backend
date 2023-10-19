@@ -4,9 +4,9 @@ import { MulterModule } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 
 import { DatabaseModule } from './database/database.module';
+import { VacancyModule } from './vacancy/vacancy.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
-import { VacancyModule } from './vacancy/vacancy.module';
 import { TecnologyModule } from './tecnology/tecnology.module';
 import { CompanyModule } from './company/company.module';
 import { AppService } from './app.service';

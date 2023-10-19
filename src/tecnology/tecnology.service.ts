@@ -1,15 +1,11 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { CreateTecnologyDto } from './dto/create-tecnology.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
 import { Tecnology } from 'src/database/entities/tecnology.entity';
+import { TecnologyRepository } from './tecnology.repository';
 
 @Injectable()
 export class TecnologyService {
-  constructor(
-    @InjectRepository(Tecnology)
-    private readonly repository: Repository<Tecnology>,
-  ) {}
+  constructor(private readonly repository: TecnologyRepository) {}
 
   async create(createTecnologyDto: CreateTecnologyDto): Promise<Tecnology> {
     try {

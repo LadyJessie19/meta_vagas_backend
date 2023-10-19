@@ -1,16 +1,12 @@
-import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateCompanyDto } from './dto/create-company.dto';
-import { Company } from 'src/database/entities/company.entity';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Company } from '../database/entities/company.entity';
 import { UpdateCompanyDto } from './dto/update-company.dto';
+import { CompanyRepository } from './company.repository';
 
 @Injectable()
 export class CompanyService {
-  constructor(
-    @InjectRepository(Company)
-    private readonly repository: Repository<Company>,
-  ) {}
+  constructor(private readonly repository: CompanyRepository) {}
 
   async create(createCompanyDto: CreateCompanyDto): Promise<Company> {
     try {
