@@ -31,7 +31,7 @@ export class User {
     type: 'character varying',
     length: 64,
     nullable: true,
-    select: false,
+    select: true,
   })
   password: string;
 
