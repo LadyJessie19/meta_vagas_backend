@@ -11,23 +11,37 @@ import { updateVacancyDto } from './dto/update-vacancy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vacancy } from '../database/entities/vacancy.entity';
 import { Brackets, Repository } from 'typeorm';
-import { UserService } from 'src/user/user.service';
-import * as xlsx from 'xlsx';
+import { UserService } from '../user/user.service';
+import { CompanyService } from 'src/company/company.service';
+import { TecnologyService } from 'src/tecnology/tecnology.service';
 
 @Injectable()
 export class VacancyService {
   constructor(
     @InjectRepository(Vacancy)
-    private readonly vacancyRepository: Repository<Vacancy>,
+    private vacancyRepository: Repository<Vacancy>,
     private userService: UserService,
+    private companyService: CompanyService,
+    private techService: TecnologyService,
   ) {}
 
-  async createVacancy(vacancy: any, userId: number) {
+  async createVacancy(
+    vacancy: CreateVacancyDto,
+    userEmail: string,
+    companyId: number,
+    techs: string[],
+  ) {
     try {
-      const user = await this.userService.findOne(userId);
-      const newVacancy: any = this.vacancyRepository.create(vacancy);
+      const tech = (await this.techService.findAll()).filter((tech) => {
+        techs.includes(tech.tecName);
+      });
+      const company = await this.companyService.findOne(companyId);
+      const user = await this.userService.findUserByEmail(userEmail);
+      const newVacancy = this.vacancyRepository.create(vacancy);
 
       newVacancy.advertiserId = user;
+      newVacancy.companyId = company;
+      newVacancy.technologies = tech;
 
       await this.vacancyRepository.save(newVacancy);
 
@@ -122,7 +136,7 @@ export class VacancyService {
     }
   }
 
-  async updateVacancy(id: number, payload: any) {
+  async updateVacancy(id: number, payload: updateVacancyDto) {
     try {
       const vacancy = await this.vacancyRepository.findOneOrFail({
         where: {
@@ -151,28 +165,5 @@ export class VacancyService {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-  }
-
-  async criarVagasAPartirDeXLSX(fileBuffer: Buffer): Promise<Vacancy[]> {
-    const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(worksheet);
-
-    const vacancies: Vacancy[] = data.map((row: any) => {
-      const vacancy = new Vacancy();
-
-      vacancy.vacancyRole = row.vacancyRole;
-      vacancy.wage = row.wage;
-      vacancy.location = row.location;
-      vacancy.vacancyType = row.vacancyType;
-      vacancy.vacancyDescription = row.vacancyDescription;
-      vacancy.level = row.level;
-      vacancy.companyId = row.companyId;
-
-      return vacancy;
-    });
-
-    return this.vacancyRepository.save(vacancies);
   }
 }
