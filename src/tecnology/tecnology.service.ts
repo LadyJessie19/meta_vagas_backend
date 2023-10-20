@@ -1,8 +1,13 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateTecnologyDto } from './dto/create-tecnology.dto';
 import { Tecnology } from '../database/entities/tecnology.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOneOptions, Like, Repository } from 'typeorm';
 
 @Injectable()
 export class TecnologyService {
@@ -25,6 +30,65 @@ export class TecnologyService {
   }
 
   async findAll(): Promise<Tecnology[]> {
-    return await this.repository.find();
+    try {
+      return await this.repository.find();
+    } catch (error) {
+      throw new Error(`Failed to fetch technologies: ${error.message}`);
+    }
+  }
+
+  async findOne(id: number): Promise<Tecnology> {
+    try {
+      const tecnology = await this.repository.findOneByOrFail({ id });
+      if (!tecnology) {
+        throw new NotFoundException(`Tecnology with ID ${id} not found`);
+      }
+      return tecnology;
+    } catch (error) {
+      throw new Error(`Failed to find technology by ID: ${error.message}`);
+    }
+  }
+
+  async update(id: number, updateData: Partial<Tecnology>): Promise<Tecnology> {
+    try {
+      await this.findOne(id);
+      await this.repository.update(id, updateData);
+      return await this.findOne(id);
+    } catch (error) {
+      throw new Error(`Failed to update technology: ${error.message}`);
+    }
+  }
+
+  async delete(id: number): Promise<object> {
+    try {
+      const tecnology = await this.findOne(id);
+      await this.repository.remove(tecnology);
+      return {
+        success: true,
+        message: `The tecnology with id ${id} was successfully deleted`,
+      };
+    } catch (error) {
+      throw new Error(`Failed to delete technology: ${error.message}`);
+    }
+  }
+
+  async findByName(tecName: string): Promise<Tecnology | null> {
+    if (!tecName) {
+      throw new BadRequestException('Name parameter is required');
+    }
+
+    tecName = tecName.toLowerCase().replace(/\s+/g, '');
+
+    const tecnology = await this.repository.findOneByOrFail({
+      tecName,
+    });
+
+    if (!tecnology) {
+      throw new NotFoundException(
+        `Technology with tecName '${tecName}' not found`,
+      );
+    }
+
+    return tecnology;
   }
 }
