@@ -8,6 +8,7 @@ import {
   Patch,
   Delete,
   Query,
+  BadRequestException,
 } from '@nestjs/common';
 import { TecnologyService } from './tecnology.service';
 import { CreateTecnologyDto } from './dto/create-tecnology.dto';
@@ -17,6 +18,7 @@ import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
 import { Tecnology } from '../database/entities/tecnology.entity';
 import { UpdateTecnologyDto } from './dto/update-tecnology.dto';
+import { IsString } from 'class-validator';
 
 @ApiTags('Technology')
 @UseGuards(RolesGuard)
@@ -35,7 +37,7 @@ export class TecnologyController {
     return await this.tecnologyService.findAll();
   }
 
-  @Get(':id')
+  @Get(':id/one')
   async findOne(@Param('id') id: string) {
     return await this.tecnologyService.findOne(+id);
   }
@@ -54,7 +56,11 @@ export class TecnologyController {
   }
 
   @Get('search')
-  async search(@Query('name') name: string): Promise<Tecnology> {
+  async search(@Query('name') name: string): Promise<Tecnology[]> {
+    Promise<Tecnology>;
+    if (!name) {
+      throw new BadRequestException('Name parameter is required');
+    }
     return await this.tecnologyService.findByName(name);
   }
 }

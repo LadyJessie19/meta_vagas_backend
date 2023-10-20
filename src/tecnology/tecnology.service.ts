@@ -7,7 +7,7 @@ import {
 import { CreateTecnologyDto } from './dto/create-tecnology.dto';
 import { Tecnology } from '../database/entities/tecnology.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TecnologyService {
@@ -18,7 +18,17 @@ export class TecnologyService {
 
   async create(createTecnologyDto: CreateTecnologyDto): Promise<Tecnology> {
     try {
-      const newTecnology = this.repository.create(createTecnologyDto);
+      const newTecName = createTecnologyDto.tecName.toLowerCase().trim();
+      const newCreatorsName = createTecnologyDto.creatorsName
+        .toLowerCase()
+        .trim();
+
+      const payload: CreateTecnologyDto = {
+        tecName: newTecName,
+        creatorsName: newCreatorsName,
+      };
+
+      const newTecnology = this.repository.create(payload);
       await this.repository.save(newTecnology);
       return newTecnology;
     } catch (error: any) {
@@ -72,20 +82,22 @@ export class TecnologyService {
     }
   }
 
-  async findByName(tecName: string): Promise<Tecnology | null> {
+  async findByName(tecName: string): Promise<Tecnology[] | null> {
     if (!tecName) {
       throw new BadRequestException('Name parameter is required');
     }
 
-    tecName = tecName.toLowerCase().replace(/\s+/g, '');
+    const query = this.repository
+      .createQueryBuilder('tecnology')
+      .where('LOWER(tecnology.tecName) ILIKE :name', {
+        name: `%${tecName.toLowerCase()}%`,
+      });
 
-    const tecnology = await this.repository.findOneByOrFail({
-      tecName,
-    });
+    const tecnology = await query.getMany();
 
     if (!tecnology) {
       throw new NotFoundException(
-        `Technology with tecName '${tecName}' not found`,
+        `Technology with tecName containing '${tecName}' not found`,
       );
     }
 
