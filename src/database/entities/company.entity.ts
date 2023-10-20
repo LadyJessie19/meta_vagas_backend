@@ -24,6 +24,6 @@ export class Company {
   @Column({ type: 'text', nullable: true })
   description: string;
 
-  @OneToMany(() => Vacancy, (vacancy) => vacancy.company)
+  @OneToMany(() => Vacancy, (vacancy) => vacancy.companyId)
   vacancies: Vacancy[];
 }

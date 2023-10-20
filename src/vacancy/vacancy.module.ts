@@ -4,11 +4,11 @@ import { Vacancy } from '../database/entities/vacancy.entity';
 import { UserModule } from 'src/user/user.module';
 import { VacancyService } from './vacancy.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigService } from '@nestjs/config';
-import { ConfigModule } from '@nestjs/config';
+import { CompanyModule } from 'src/company/company.module';
+import { TecnologyModule } from 'src/tecnology/tecnology.module';
 
 @Module({
-  imports : [TypeOrmModule.forFeature([Vacancy]), UserModule],
+  imports : [TypeOrmModule.forFeature([Vacancy]), UserModule, CompanyModule, TecnologyModule],
   controllers: [VacancyController],
   providers : [VacancyService],
 })

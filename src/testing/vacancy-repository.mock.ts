@@ -1,5 +1,5 @@
 import { getRepositoryToken } from "@nestjs/typeorm"
-import { Vacancy } from "../data-base/entities/vacancy.entity"
+import { Vacancy } from "../database/entities/vacancy.entity"
 import { vacancyCreatedMock } from "./vacancy-created.mock"
 import { vacanciesFoundMock } from "./vacancies-found.mock"
 

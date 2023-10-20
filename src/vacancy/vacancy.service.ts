@@ -12,8 +12,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Vacancy } from '../database/entities/vacancy.entity';
 import { Brackets, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
-import { CompanyService } from 'src/company/company.service';
-import { TecnologyService } from 'src/tecnology/tecnology.service';
+import { CompanyService } from '../company/company.service';
+import { TecnologyService } from '../tecnology/tecnology.service';
+import { User } from 'src/database/entities/user.entity';
+import { PostVacancyDto } from './dto/post-vacancy.dto';
 
 @Injectable()
 export class VacancyService {
@@ -21,21 +23,25 @@ export class VacancyService {
         @InjectRepository(Vacancy)
         private vacancyRepository: Repository<Vacancy>,
         private userService: UserService,
-        private companyService : CompanyService,
         private techService : TecnologyService,
+        private companyService : CompanyService,
     ) { }
 
-    async createVacancy(vacancy: CreateVacancyDto, userEmail: string, companyId : number, techs : string[]) {
+    async createVacancy(vacancy : PostVacancyDto) {
         try {
+            const technologies = await this.techService.findAll()
+            const company = await this.companyService.findOne(vacancy.companyId);
+            const user = await this.userService.findUserByEmail(vacancy.advertiserEmail);
 
-            const tech = (await this.techService.findAll()).filter((tech) => {techs.includes(tech.tecName)})
-            const company = await this.companyService.findOne(companyId);
-            const user = await this.userService.findUserByEmail(userEmail);
-            const newVacancy = this.vacancyRepository.create(vacancy);
+            const newVacancy = this.vacancyRepository.create({...vacancy, advertiserId : user, companyId : company, technologies : []});
 
-            newVacancy.advertiserId = user;
-            newVacancy.companyId = company;
-            newVacancy.technologies = tech;
+            for(let i = 0; i < vacancy.technologies.length ; i++){
+                for(let j = 0; j < technologies.length ; j++){
+                    if(vacancy.technologies[i].trim().toLocaleLowerCase() === technologies[j].tecName.trim().toLowerCase()){
+                        newVacancy.technologies.push(technologies[j])
+                    }
+                }
+            }
 
             await this.vacancyRepository.save(newVacancy)
 
