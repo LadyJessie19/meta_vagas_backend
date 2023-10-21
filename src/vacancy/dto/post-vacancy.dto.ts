@@ -1,6 +1,7 @@
 import { IsNumber, IsString, IsNotEmpty, IsArray } from 'class-validator';
 import { Tecnology } from '../../database/entities/tecnology.entity';
 import { Company } from '../../database/entities/company.entity';
+import { User } from 'src/database/entities/user.entity';
 
 export class PostVacancyDto {
   @IsNotEmpty()
@@ -29,13 +30,13 @@ export class PostVacancyDto {
 
   @IsNotEmpty()
   @IsNumber()
-  companyId: number;
+  companyId: Company;
 
   @IsNotEmpty()
   @IsArray()
-  technologies: string[];
+  tecnologies: Tecnology[];
 
   @IsNotEmpty()
   @IsString()
-  advertiserEmail : string;
+  advertiserEmail: User;
 }

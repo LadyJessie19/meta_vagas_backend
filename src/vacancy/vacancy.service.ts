@@ -4,7 +4,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { updateVacancyDto } from './dto/update-vacancy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vacancy } from '../database/entities/vacancy.entity';
@@ -12,7 +11,6 @@ import { Brackets, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { CompanyService } from '../company/company.service';
 import { TecnologyService } from '../tecnology/tecnology.service';
-import { User } from 'src/database/entities/user.entity';
 import { PostVacancyDto } from './dto/post-vacancy.dto';
 
 @Injectable()
@@ -27,29 +25,31 @@ export class VacancyService {
 
   async createVacancy(vacancy: PostVacancyDto) {
     try {
-      const technologies = await this.techService.findAll();
-      const company = await this.companyService.findOne(vacancy.companyId);
+      const tecnologies = await this.techService.findAll();
+      const company = await this.companyService.findOne(+vacancy.companyId);
       const user = await this.userService.findUserByEmail(
-        vacancy.advertiserEmail,
+        vacancy.advertiserEmail as unknown as string,
       );
 
       const newVacancy = this.vacancyRepository.create({
         ...vacancy,
         advertiserId: user,
         companyId: company,
-        technologies: [],
+        tecnologies: [],
       });
 
-      for (let i = 0; i < vacancy.technologies.length; i++) {
-        for (let j = 0; j < technologies.length; j++) {
+      for (let i = 0; i < vacancy.tecnologies.length; i++) {
+        for (let j = 0; j < tecnologies.length; j++) {
           if (
-            vacancy.technologies[i].trim().toLocaleLowerCase() ===
-            technologies[j].tecName.trim().toLowerCase()
+            vacancy.tecnologies[i].toString().trim().toLocaleLowerCase() ===
+            tecnologies[j].tecName.trim().toLowerCase()
           ) {
-            newVacancy.technologies.push(technologies[j]);
+            newVacancy.tecnologies.push(tecnologies[j]);
           }
         }
       }
+
+      await this.vacancyRepository.save(newVacancy);
 
       return newVacancy;
     } catch (error) {
