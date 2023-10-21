@@ -12,6 +12,8 @@ import { Brackets, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { CompanyService } from '../company/company.service';
 import { TecnologyService } from '../tecnology/tecnology.service';
+import { User } from 'src/database/entities/user.entity';
+import { PostVacancyDto } from './dto/post-vacancy.dto';
 
 @Injectable()
 export class VacancyService {
@@ -19,29 +21,35 @@ export class VacancyService {
     @InjectRepository(Vacancy)
     private vacancyRepository: Repository<Vacancy>,
     private userService: UserService,
-    private companyService: CompanyService,
     private techService: TecnologyService,
+    private companyService: CompanyService,
   ) {}
 
-  async createVacancy(
-    vacancy: CreateVacancyDto,
-    userEmail: string,
-    companyId: number,
-    techs: string[],
-  ) {
+  async createVacancy(vacancy: PostVacancyDto) {
     try {
-      const tech = (await this.techService.findAll()).filter((tech) => {
-        techs.includes(tech.tecName);
+      const technologies = await this.techService.findAll();
+      const company = await this.companyService.findOne(vacancy.companyId);
+      const user = await this.userService.findUserByEmail(
+        vacancy.advertiserEmail,
+      );
+
+      const newVacancy = this.vacancyRepository.create({
+        ...vacancy,
+        advertiserId: user,
+        companyId: company,
+        technologies: [],
       });
-      const company = await this.companyService.findOne(companyId);
-      const user = await this.userService.findUserByEmail(userEmail);
-      const newVacancy = this.vacancyRepository.create(vacancy);
 
-      newVacancy.advertiserId = user;
-      newVacancy.companyId = company;
-      newVacancy.technologies = tech;
-
-      await this.vacancyRepository.save(newVacancy);
+      for (let i = 0; i < vacancy.technologies.length; i++) {
+        for (let j = 0; j < technologies.length; j++) {
+          if (
+            vacancy.technologies[i].trim().toLocaleLowerCase() ===
+            technologies[j].tecName.trim().toLowerCase()
+          ) {
+            newVacancy.technologies.push(technologies[j]);
+          }
+        }
+      }
 
       return newVacancy;
     } catch (error) {
@@ -164,4 +172,5 @@ export class VacancyService {
       );
     }
   }
+  s;
 }

@@ -16,7 +16,7 @@ import {
 import { VacancyService } from './vacancy.service';
 import { updateVacancyDto } from './dto/update-vacancy.dto';
 import { AuthGuard } from '../auth/guards/auth.guards';
-import { postVacancyType } from './dto/post-vacancy.type';
+import { PostVacancyDto } from './dto/post-vacancy.dto';
 
 @UseGuards(AuthGuard)
 @Controller('vacancies')
@@ -24,14 +24,9 @@ export class VacancyController {
   constructor(private readonly vacancyService: VacancyService) {}
 
   @Post()
-  async create(@Request() req, @Body() payload: postVacancyType) {
-    const advertiserId = req.user.sub;
-    return this.vacancyService.createVacancy(
-      payload.payload,
-      payload.userEmail,
-      payload.companyId,
-      payload.technologies,
-    );
+  async create(@Request() req, @Body() payload: PostVacancyDto) {
+    const advertiserId = req.user.e;
+    return this.vacancyService.createVacancy(payload);
   }
 
   @Get()
