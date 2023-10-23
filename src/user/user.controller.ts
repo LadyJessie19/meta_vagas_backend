@@ -32,17 +32,17 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseInterceptors(JwtInterceptor) //This is getting the token from the context headers authorization
+  @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN]) //This is seting the ROLES_KEYS as admin role
-  @Get()
+  @Roles([RoleEnum.ADVERTISER])
+  @Get('all')
   async findAll() {
     return this.userService.findAll();
   }
 
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN])
+  @Roles([RoleEnum.ADVERTISER])
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
@@ -51,9 +51,9 @@ export class UserController {
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard)
   @ApiBasicAuth()
-  @Get('profile')
+  @Get(':id/profile')
   async getProfile(@CurrentUser() currentUser: CurrentUserDto) {
-    return this.userService.findById(currentUser.sub);
+    return this.userService.findById(currentUser.id);
   }
 
   @UseInterceptors(JwtInterceptor)
@@ -66,7 +66,7 @@ export class UserController {
 
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN])
+  @Roles([RoleEnum.ADVERTISER])
   @Delete(':id/soft-delete')
   async remove(@Param('id') id: string) {
     return await this.userService.remove(+id);

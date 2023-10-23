@@ -37,7 +37,6 @@ export class Vacancy {
   level: string;
 
   @ManyToOne(() => Company, (company) => company.vacancies)
-  @JoinColumn()
   companyId: Company;
 
   @ManyToOne(() => User, (user) => user.vacancies)

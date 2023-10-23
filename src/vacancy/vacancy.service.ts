@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
@@ -12,6 +13,10 @@ import { Brackets, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { CompanyService } from '../company/company.service';
 import { TecnologyService } from '../tecnology/tecnology.service';
+import * as xlsx from 'xlsx';
+import { promises as fsPromises } from 'fs';
+import { MulterFile } from 'multer';
+import * as path from 'path';
 
 @Injectable()
 export class VacancyService {
@@ -163,5 +168,55 @@ export class VacancyService {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async createVacanciesAPartirFromXLSX(
+    file: MulterFile,
+    fileBuffer: Buffer,
+  ): Promise<Vacancy[]> {
+    const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+
+    if (path.extname(file.originalname).toLowerCase() !== '.xlsx') {
+      throw new BadRequestException(
+        'Tipo de arquivo inválido. Somente arquivos .xlsx são permitidos.',
+      );
+    }
+
+    const maxSizeInBytes = 5 * 1024 * 1024; 
+
+    if (file.size > maxSizeInBytes) {
+      throw new BadRequestException(
+        'Tamanho do arquivo excede o limite permitido de 5 MB.',
+      );
+    }
+
+    if (!file || !file.originalname) {
+      throw new BadRequestException('Arquivo vazio ou nome inválido.');
+    }
+
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const extension = file.originalname.split('.').pop();
+    const filename = `${uniqueSuffix}.${extension}`;
+    const uploadPath = path.join(__dirname, '../../src/uploads', filename);
+
+    await fsPromises.writeFile(uploadPath, fileBuffer);
+
+    const vacancies: any = await data.map(async (row: any) => {
+      const vacancy = new Vacancy();
+
+      vacancy.vacancyRole = row.vacancyRole;
+      vacancy.wage = row.wage;
+      vacancy.location = row.location;
+      vacancy.vacancyType = row.vacancyType;
+      vacancy.vacancyDescription = row.vacancyDescription;
+      vacancy.level = row.level;
+      vacancy.companyId = await this.companyService.findOne(row.companyId);
+
+      return this.vacancyRepository.save(vacancy);
+    });
+    return vacancies;
   }
 }
