@@ -47,7 +47,13 @@ export class CompanyController {
   }
 
   @Get(':id/vacancies')
-  findOne(@Param('id') companyId: number) {
-    return this.companyService.findOne(companyId);
+  findOne(@Param('id') companyId: string) {
+    return this.companyService.findOne(+companyId);
+  }
+
+  //  @Roles(RoleEnum.ADMIN)
+  @Delete(':id')
+  delete(@Param('id') id: string) {
+    return this.companyService.delete(+id);
   }
 }
