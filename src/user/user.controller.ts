@@ -52,9 +52,9 @@ export class UserController {
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard)
   @ApiBasicAuth()
-  @Get(':id/profile')
+  @Get('me/profile')
   async getProfile(@CurrentUser() currentUser: CurrentUserDto) {
-    return this.userService.findById(currentUser.id);
+    return this.userService.findById(currentUser.user);
   }
 
   @UseInterceptors(JwtInterceptor)

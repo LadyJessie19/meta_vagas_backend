@@ -1,4 +1,8 @@
 export class CurrentUserDto {
-  id: number;
+  user: number;
   email: string;
+  role: string;
+  isActive: boolean;
+  iat: number;
+  exp: number;
 }
