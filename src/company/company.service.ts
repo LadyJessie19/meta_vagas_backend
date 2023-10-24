@@ -68,4 +68,17 @@ export class CompanyService {
       );
     }
   }
+
+  async delete(id: number): Promise<object> {
+    try {
+      const company = await this.findOne(id);
+      await this.repository.remove(company);
+      return {
+        success: true,
+        message: `The company with id ${id} was successfully deleted`,
+      };
+    } catch (error) {
+      throw new Error(`Failed to delete company: ${error.message}`);
+    }
+  }
 }

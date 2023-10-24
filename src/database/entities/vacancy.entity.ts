@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
   ManyToMany,
   JoinTable,
-  JoinColumn
-  } from 'typeorm';
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
 import { Tecnology } from './tecnology.entity';
 import { Company } from './company.entity';
@@ -37,15 +37,15 @@ export class Vacancy {
   level: string;
 
   @ManyToOne(() => Company, (company) => company.vacancies)
-  @JoinColumn()
   companyId: Company;
 
   @ManyToOne(() => User, (user) => user.vacancies)
+  @JoinColumn({ name: 'advertiserId', referencedColumnName: 'id' })
   advertiserId: User;
 
-  @ManyToMany(() => Tecnology, (technology) => technology.vacancies)
-  @JoinTable()
-  technologies: Tecnology[];
+  @ManyToMany(() => Tecnology, (tecnology) => tecnology.vacancies)
+  @JoinTable({ name: 'tecnologies_vacancies' })
+  tecnologies: Tecnology[];
 
   @CreateDateColumn()
   createdAt: Date;

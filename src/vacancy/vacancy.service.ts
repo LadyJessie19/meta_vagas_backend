@@ -1,10 +1,10 @@
 import {
+  BadRequestException,
   HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateVacancyDto } from './dto/create-vacancy.dto';
 import { updateVacancyDto } from './dto/update-vacancy.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Vacancy } from '../database/entities/vacancy.entity';
@@ -12,6 +12,11 @@ import { Brackets, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
 import { CompanyService } from '../company/company.service';
 import { TecnologyService } from '../tecnology/tecnology.service';
+import * as xlsx from 'xlsx';
+import { promises as fsPromises } from 'fs';
+import { MulterFile } from 'multer';
+import * as path from 'path';
+import { PostVacancyDto } from './dto/post-vacancy.dto';
 
 @Injectable()
 export class VacancyService {
@@ -19,27 +24,35 @@ export class VacancyService {
     @InjectRepository(Vacancy)
     private vacancyRepository: Repository<Vacancy>,
     private userService: UserService,
-    private companyService: CompanyService,
     private techService: TecnologyService,
+    private companyService: CompanyService,
   ) {}
 
-  async createVacancy(
-    vacancy: CreateVacancyDto,
-    userEmail: string,
-    companyId: number,
-    techs: string[],
-  ) {
+  async createVacancy(vacancy: PostVacancyDto) {
     try {
-      const tech = (await this.techService.findAll()).filter((tech) => {
-        techs.includes(tech.tecName);
-      });
-      const company = await this.companyService.findOne(companyId);
-      const user = await this.userService.findUserByEmail(userEmail);
-      const newVacancy = this.vacancyRepository.create(vacancy);
+      const tecnologies = await this.techService.findAll();
+      const company = await this.companyService.findOne(+vacancy.companyId);
+      const user = await this.userService.findUserByEmail(
+        vacancy.advertiserEmail as unknown as string,
+      );
 
-      newVacancy.advertiserId = user;
-      newVacancy.companyId = company;
-      newVacancy.technologies = tech;
+      const newVacancy = this.vacancyRepository.create({
+        ...vacancy,
+        advertiserId: user,
+        companyId: company,
+        tecnologies: [],
+      });
+
+      for (let i = 0; i < vacancy.tecnologies.length; i++) {
+        for (let j = 0; j < tecnologies.length; j++) {
+          if (
+            vacancy.tecnologies[i].toString().trim().toLocaleLowerCase() ===
+            tecnologies[j].tecName.trim().toLowerCase()
+          ) {
+            newVacancy.tecnologies.push(tecnologies[j]);
+          }
+        }
+      }
 
       await this.vacancyRepository.save(newVacancy);
 
@@ -163,5 +176,55 @@ export class VacancyService {
         error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+
+  async createVacanciesAPartirFromXLSX(
+    file: MulterFile,
+    fileBuffer: Buffer,
+  ): Promise<Vacancy[]> {
+    const workbook = xlsx.read(fileBuffer, { type: 'buffer' });
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+
+    if (path.extname(file.originalname).toLowerCase() !== '.xlsx') {
+      throw new BadRequestException(
+        'Tipo de arquivo inválido. Somente arquivos .xlsx são permitidos.',
+      );
+    }
+
+    const maxSizeInBytes = 5 * 1024 * 1024;
+
+    if (file.size > maxSizeInBytes) {
+      throw new BadRequestException(
+        'Tamanho do arquivo excede o limite permitido de 5 MB.',
+      );
+    }
+
+    if (!file || !file.originalname) {
+      throw new BadRequestException('Arquivo vazio ou nome inválido.');
+    }
+
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    const extension = file.originalname.split('.').pop();
+    const filename = `${uniqueSuffix}.${extension}`;
+    const uploadPath = path.join(__dirname, '../../src/uploads', filename);
+
+    await fsPromises.writeFile(uploadPath, fileBuffer);
+
+    const vacancies: any = await data.map(async (row: any) => {
+      const vacancy = new Vacancy();
+
+      vacancy.vacancyRole = row.vacancyRole;
+      vacancy.wage = row.wage;
+      vacancy.location = row.location;
+      vacancy.vacancyType = row.vacancyType;
+      vacancy.vacancyDescription = row.vacancyDescription;
+      vacancy.level = row.level;
+      vacancy.companyId = await this.companyService.findOne(row.companyId);
+
+      return this.vacancyRepository.save(vacancy);
+    });
+    return vacancies;
   }
 }

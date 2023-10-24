@@ -13,11 +13,12 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBasicAuth, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { CurrentUserDto } from './dto/current-user.dto';
+
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
 import { CurrentUser } from '../decorators/current.user.decorators';
-import { CurrentUserDto } from './dto/current-user.dto';
-import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '../auth/guards/auth.guards';
 import { JwtInterceptor } from '../auth/jwt/jwt.interceptor';
 
@@ -32,17 +33,17 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseInterceptors(JwtInterceptor) //This is getting the token from the context headers authorization
+  @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN]) //This is seting the ROLES_KEYS as admin role
-  @Get()
+  @Roles([RoleEnum.ADVERTISER])
+  @Get('all')
   async findAll() {
     return this.userService.findAll();
   }
 
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN])
+  @Roles([RoleEnum.ADVERTISER])
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
@@ -51,9 +52,9 @@ export class UserController {
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard)
   @ApiBasicAuth()
-  @Get('profile')
+  @Get(':id/profile')
   async getProfile(@CurrentUser() currentUser: CurrentUserDto) {
-    return this.userService.findById(currentUser.sub);
+    return this.userService.findById(currentUser.id);
   }
 
   @UseInterceptors(JwtInterceptor)
@@ -66,7 +67,7 @@ export class UserController {
 
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN])
+  @Roles([RoleEnum.ADVERTISER])
   @Delete(':id/soft-delete')
   async remove(@Param('id') id: string) {
     return await this.userService.remove(+id);
