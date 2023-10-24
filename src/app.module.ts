@@ -1,7 +1,5 @@
 import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { MulterModule } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
 
 import { DatabaseModule } from './database/database.module';
 import { VacancyModule } from './vacancy/vacancy.module';
@@ -21,32 +19,6 @@ import { AppController } from './app.controller';
     AuthModule,
     TecnologyModule,
     CompanyModule,
-    MulterModule.register({
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, callback) => {
-          const uniqueSuffix =
-            Date.now() + '-' + Math.round(Math.random() * 1e9);
-          const extension = file.originalname.split('.').pop();
-          callback(null, `${uniqueSuffix}.${extension}`);
-        },
-      }),
-      limits: {
-        fileSize: 1024 * 1024 * 5,
-      },
-      fileFilter: (req, file, callback) => {
-        if (file.mimetype.includes('xlsx')) {
-          callback(null, true);
-        } else {
-          callback(
-            new Error(
-              'Tipo de arquivo inválido. Somente arquivos .xlsx são permitidos.',
-            ),
-            false,
-          );
-        }
-      },
-    }),
   ],
   providers: [AppService],
   controllers: [AppController],

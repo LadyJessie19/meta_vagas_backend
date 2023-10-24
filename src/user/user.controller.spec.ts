@@ -95,7 +95,7 @@ describe('UsersController', () => {
       );
 
       expect(guards.length).toEqual(1);
-      expect(new guards[0]()).toBeInstanceOf(RolesGuard);
+      expect(new guards[0]()).toBeInstanceOf(AuthGuard);
     });
   });
 });

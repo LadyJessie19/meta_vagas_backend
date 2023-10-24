@@ -7,7 +7,7 @@ export const userServiceMock = {
   useValue: {
     create: jest.fn().mockReturnValue(userListMock[0]),
     findById: jest.fn().mockResolvedValue(userListMock[0]),
-    findByEmail: jest.fn().mockResolvedValue(userFoundByMailMock),
+    findUserByEmail: jest.fn().mockResolvedValue(userFoundByMailMock),
     update: jest.fn().mockResolvedValue(userListMock[0]),
     restore: jest.fn().mockResolvedValue(userListMock[0]),
     remove: jest.fn().mockResolvedValue(userListMock[0]),

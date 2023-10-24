@@ -35,15 +35,15 @@ export class UserController {
 
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN])
-  @Get()
+  @Roles([RoleEnum.ADVERTISER])
+  @Get('all')
   async findAll() {
     return this.userService.findAll();
   }
 
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN])
+  @Roles([RoleEnum.ADVERTISER])
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.userService.findOne(+id);
@@ -52,9 +52,9 @@ export class UserController {
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard)
   @ApiBasicAuth()
-  @Get('profile')
+  @Get(':id/profile')
   async getProfile(@CurrentUser() currentUser: CurrentUserDto) {
-    return this.userService.findById(currentUser.sub);
+    return this.userService.findById(currentUser.id);
   }
 
   @UseInterceptors(JwtInterceptor)
@@ -67,7 +67,7 @@ export class UserController {
 
   @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN])
+  @Roles([RoleEnum.ADVERTISER])
   @Delete(':id/soft-delete')
   async remove(@Param('id') id: string) {
     return await this.userService.remove(+id);

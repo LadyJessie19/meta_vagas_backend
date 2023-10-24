@@ -18,8 +18,8 @@ export const CurrentUser = createParamDecorator(
 );
 
 export const TokenUser = createParamDecorator(
-  (data: unknown, context: ExecutionContext) => {
-    console.log('Chegou no TokenUser decorator');
+  (_data: unknown, context: ExecutionContext) => {
+
     const request = context.switchToHttp().getRequest();
     return request.user;
   },
