@@ -13,11 +13,12 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiBasicAuth, ApiExcludeEndpoint, ApiTags } from '@nestjs/swagger';
+import { CurrentUserDto } from './dto/current-user.dto';
+
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
 import { CurrentUser } from '../decorators/current.user.decorators';
-import { CurrentUserDto } from './dto/current-user.dto';
-import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthGuard } from '../auth/guards/auth.guards';
 import { JwtInterceptor } from '../auth/jwt/jwt.interceptor';
 
@@ -32,9 +33,9 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @UseInterceptors(JwtInterceptor) //This is getting the token from the context headers authorization
+  @UseInterceptors(JwtInterceptor)
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles([RoleEnum.ADMIN]) //This is seting the ROLES_KEYS as admin role
+  @Roles([RoleEnum.ADMIN])
   @Get()
   async findAll() {
     return this.userService.findAll();

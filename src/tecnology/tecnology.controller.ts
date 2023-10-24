@@ -19,9 +19,10 @@ import { Roles } from '../decorators/role.decorators';
 import { Tecnology } from '../database/entities/tecnology.entity';
 import { UpdateTecnologyDto } from './dto/update-tecnology.dto';
 import { IsString } from 'class-validator';
+import { AuthGuard } from 'src/auth/guards/auth.guards';
 
 @ApiTags('Technology')
-@UseGuards(RolesGuard)
+@UseGuards(RolesGuard, AuthGuard)
 @Controller('tecnologies')
 export class TecnologyController {
   constructor(private readonly tecnologyService: TecnologyService) {}
