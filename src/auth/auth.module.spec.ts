@@ -1,23 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { AuthModule } from './auth.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from '../user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user.module';
-import { UserService } from './user.service';
-import { UserController } from './user.controller';
 import { User } from '../database/entities/user.entity';
 import { Vacancy } from '../database/entities/vacancy.entity';
 import { Company } from '../database/entities/company.entity';
 import { Tecnology } from '../database/entities/tecnology.entity';
-import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule } from '@nestjs/config';
 
-describe('UserModule', () => {
-  let userService: UserService;
-  let userController: UserController;
+describe('AuthModule', () => {
+  let authController: AuthController;
+  let authService: AuthService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [
-        ConfigModule.forRoot({ isGlobal: true }),
         TypeOrmModule.forRoot({
           type: 'postgres',
           host: 'localhost',
@@ -29,20 +28,21 @@ describe('UserModule', () => {
           synchronize: true,
         }),
         UserModule,
+        AuthModule,
         JwtModule.register({
           global: true,
-          secret: process.env.JWT_SECRET,
+          secret: 'my-secret-key',
           signOptions: { expiresIn: '24h' },
         }),
       ],
     }).compile();
 
-    userService = module.get<UserService>(UserService);
-    userController = module.get<UserController>(UserController);
+    authController = module.get<AuthController>(AuthController);
+    authService = module.get<AuthService>(AuthService);
   });
 
   it('should be defined', () => {
-    expect(userService).toBeDefined();
-    expect(userController).toBeDefined();
+    expect(authController).toBeDefined();
+    expect(authService).toBeDefined();
   });
 });
