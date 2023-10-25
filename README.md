@@ -26,7 +26,7 @@
 
 ##Equipe:
 
-[@almyrneto:](https://github.com/almyrneto) | [@CaioSjc:](https://github.com/CaioSjc) | [COFerr:](https://github.com/COFerr) | [LadyJessie19:](https://github.com/LadyJessie19)
+[@almyrneto:](https://github.com/almyrneto) | [@CaioSjc:](https://github.com/CaioSjc) | [@COFerr:](https://github.com/COFerr) | [@LadyJessie19:](https://github.com/LadyJessie19)
 --- | --- | --- | ---
 ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/17ea390d-4d60-481b-9fcf-2af0eed32306) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/19e8eb12-ff88-4b12-a81c-0c96c834d229) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/91c19a99-f6d8-4acc-b81d-fd5ade593a93) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/c1675bcc-76bb-4378-a420-23afb278eca7)
 
