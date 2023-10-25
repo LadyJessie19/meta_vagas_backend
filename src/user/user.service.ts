@@ -22,7 +22,7 @@ export class UserService {
   async create(createUserDto: CreateUserDto) {
     try {
       const userExist = await this.findUserByEmail(createUserDto.email);
-
+      
       if (!!userExist) {
         throw new BadRequestException('This email is already being used.');
       }
