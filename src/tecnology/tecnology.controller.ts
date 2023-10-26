@@ -9,6 +9,7 @@ import {
   Delete,
   Query,
   BadRequestException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TecnologyService } from './tecnology.service';
 import { CreateTecnologyDto } from './dto/create-tecnology.dto';
@@ -18,8 +19,8 @@ import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
 import { Tecnology } from '../database/entities/tecnology.entity';
 import { UpdateTecnologyDto } from './dto/update-tecnology.dto';
-import { IsString } from 'class-validator';
 import { AuthGuard } from 'src/auth/guards/auth.guards';
+import { JwtInterceptor } from 'src/auth/jwt/jwt.interceptor';
 
 @ApiTags('Technology')
 @UseGuards(RolesGuard, AuthGuard)
@@ -27,12 +28,14 @@ import { AuthGuard } from 'src/auth/guards/auth.guards';
 export class TecnologyController {
   constructor(private readonly tecnologyService: TecnologyService) {}
 
-  // @Roles(RoleEnum.ADMIN)
+  @UseInterceptors(JwtInterceptor)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([RoleEnum.ADMIN])
   @Post()
   async create(@Body() createTecnologyDto: CreateTecnologyDto) {
     return await this.tecnologyService.create(createTecnologyDto);
   }
-  // Essa rota é publica!
+
   @Get()
   async findAll() {
     return await this.tecnologyService.findAll();
@@ -43,6 +46,9 @@ export class TecnologyController {
     return await this.tecnologyService.findOne(+id);
   }
 
+  @UseInterceptors(JwtInterceptor)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([RoleEnum.ADMIN])
   @Patch(':id')
   async update(
     @Param('id') id: string,
@@ -51,6 +57,9 @@ export class TecnologyController {
     return await this.tecnologyService.update(+id, updateTecnologyDto);
   }
 
+  @UseInterceptors(JwtInterceptor)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([RoleEnum.ADMIN])
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Object> {
     return await this.tecnologyService.delete(+id);

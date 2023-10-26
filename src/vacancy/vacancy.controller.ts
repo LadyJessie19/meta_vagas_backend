@@ -70,11 +70,17 @@ export class VacancyController {
     return this.vacancyService.findVacancyById({ id, userName });
   }
 
+  @UseInterceptors(JwtInterceptor)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([RoleEnum.ADMIN, RoleEnum.ADVERTISER])
   @Patch(':id')
   update(@Param('id') id: string, @Body() payload: updateVacancyDto) {
     return this.vacancyService.updateVacancy(+id, payload);
   }
 
+  @UseInterceptors(JwtInterceptor)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles([RoleEnum.ADMIN, RoleEnum.ADVERTISER])
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.vacancyService.deleteVacancy(+id);
