@@ -33,7 +33,7 @@ export class VacancyService {
       const tecnologies = await this.techService.findAll();
       const company = await this.companyService.findOne(+vacancy.companyId);
       const user = await this.userService.findUserByEmail(
-        vacancy.advertiserEmail as unknown as string,
+        vacancy.advertiserEmail,
       );
 
       const newVacancy = this.vacancyRepository.create({

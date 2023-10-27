@@ -30,13 +30,13 @@ export class PostVacancyDto {
 
   @IsNotEmpty()
   @IsNumber()
-  companyId: Company;
+  companyId: number;
 
   @IsNotEmpty()
   @IsArray()
-  tecnologies: Tecnology[];
+  tecnologies: string[];
 
   @IsNotEmpty()
   @IsString()
-  advertiserEmail: User;
+  advertiserEmail: string;
 }
