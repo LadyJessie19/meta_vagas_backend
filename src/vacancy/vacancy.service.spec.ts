@@ -23,7 +23,7 @@ describe('VacancyService', () => {
 
   describe("CreateVacancy" , () => {
     it("should create a vacancy", async () => {
-      const result = await vacancyService.createVacancy(vacancyCreatedMock, 1)
+      const result = await vacancyService.createVacancy(vacancyCreatedMock)
 
       expect(result).toEqual(vacancyCreatedMock);
     })

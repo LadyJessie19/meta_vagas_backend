@@ -7,8 +7,6 @@ export const vacancyCreatedMock = {
     vacancyDescription: "Integrate cloud services using either aws or azure.",
     level: "senior",
     companyId: 123456,
-    advertiserId : {
-        id : 1,
-        name : "teste"
-    }
+    advertiserEmail : "teste@arnia.com",
+    tecnologies : ["react", "typescript", "nestjs"]
 }
