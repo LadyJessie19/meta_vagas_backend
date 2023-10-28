@@ -24,13 +24,13 @@ export class VacancyService {
     @InjectRepository(Vacancy)
     private vacancyRepository: Repository<Vacancy>,
     private userService: UserService,
-    private techService: TecnologyService,
+    private tecService: TecnologyService,
     private companyService: CompanyService,
-  ) {}
+  ) { }
 
   async createVacancy(vacancy: PostVacancyDto) {
     try {
-      const tecnologies = await this.techService.findAll();
+      const tecnologies = await this.tecService.findAll();
       const company = await this.companyService.findOne(+vacancy.companyId);
       const user = await this.userService.findUserByEmail(
         vacancy.advertiserEmail as unknown as string,
@@ -105,29 +105,14 @@ export class VacancyService {
     try {
       const vacancies = await this.vacancyRepository
         .createQueryBuilder('vacancy')
-        .where('vacancy.wage BETWEEN :minWage AND :maxWage', {
-          minWage,
-          maxWage,
-        })
-        .andWhere('vacancy.vacancyType ILIKE :type', {
-          type: `%${type.trim()}%`,
-        })
-        .andWhere('vacancy.location ILIKE :local', {
-          local: `%${local.trim()}%`,
-        })
-        .andWhere(
-          new Brackets((qb) => {
-            qb.where('vacancy.vacancyDescription ILIKE :role', {
-              role: `%${role?.trim()}%`,
-            })
-              .orWhere('vacancy.vacancyRole ILIKE :role', {
-                role: `%${role?.trim()}%`,
-              })
-              .orWhere(':tech IN vacancy.technologies', {
-                tech: `%${tech.trim()}%`,
-              });
-          }),
-        )
+        .leftJoinAndSelect("vacancy.tecnologies", "tecnology", ':tech ILIKE "tecnology"."tecName"', { tech: `%${tech?.trim()}%`})
+        .where('vacancy.wage BETWEEN :minWage AND :maxWage', { minWage, maxWage })
+        .andWhere('vacancy.vacancyType ILIKE :type', { type: `%${type.trim()}%` })
+        .andWhere('vacancy.location ILIKE :local', { local: `%${local.trim()}%` })
+        .andWhere(new Brackets((qb) => {
+          qb.where('vacancy.vacancyDescription ILIKE :description', { description: `%${description?.trim()}%` })
+            .andWhere('vacancy.vacancyRole ILIKE :role', { role: `%${role?.trim()}%` })
+          }))
         .skip((page - 1) * limit)
         .take(limit)
         .getMany();

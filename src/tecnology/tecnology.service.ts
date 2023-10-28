@@ -89,8 +89,8 @@ export class TecnologyService {
 
     const query = this.repository
       .createQueryBuilder('tecnology')
-      .where('LOWER(tecnology.tecName) ILIKE :name', {
-        name: `%${tecName.toLowerCase()}%`,
+      .where('LOWER(tecnology.tecName) ILIKE :tecName', {
+        tecName: `%${tecName.toLowerCase()}%`,
       });
 
     const tecnology = await query.getMany();
