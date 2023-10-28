@@ -18,6 +18,10 @@ import { MulterFile } from 'multer';
 import * as path from 'path';
 import { PostVacancyDto } from './dto/post-vacancy.dto';
 
+type VacancyTecnologyQuantity = {
+  name: string;
+  vacancies: number;
+};
 @Injectable()
 export class VacancyService {
   constructor(
@@ -26,7 +30,7 @@ export class VacancyService {
     private userService: UserService,
     private tecService: TecnologyService,
     private companyService: CompanyService,
-  ) { }
+  ) {}
 
   async createVacancy(vacancy: PostVacancyDto) {
     try {
@@ -105,14 +109,31 @@ export class VacancyService {
     try {
       const vacancies = await this.vacancyRepository
         .createQueryBuilder('vacancy')
-        .leftJoinAndSelect("vacancy.tecnologies", "tecnology", ':tech ILIKE "tecnology"."tecName"', { tech: `%${tech?.trim()}%`})
-        .where('vacancy.wage BETWEEN :minWage AND :maxWage', { minWage, maxWage })
-        .andWhere('vacancy.vacancyType ILIKE :type', { type: `%${type.trim()}%` })
-        .andWhere('vacancy.location ILIKE :local', { local: `%${local.trim()}%` })
-        .andWhere(new Brackets((qb) => {
-          qb.where('vacancy.vacancyDescription ILIKE :description', { description: `%${description?.trim()}%` })
-            .andWhere('vacancy.vacancyRole ILIKE :role', { role: `%${role?.trim()}%` })
-          }))
+        .leftJoinAndSelect(
+          'vacancy.tecnologies',
+          'tecnology',
+          ':tech ILIKE "tecnology"."tecName"',
+          { tech: `%${tech?.trim()}%` },
+        )
+        .where('vacancy.wage BETWEEN :minWage AND :maxWage', {
+          minWage,
+          maxWage,
+        })
+        .andWhere('vacancy.vacancyType ILIKE :type', {
+          type: `%${type.trim()}%`,
+        })
+        .andWhere('vacancy.location ILIKE :local', {
+          local: `%${local.trim()}%`,
+        })
+        .andWhere(
+          new Brackets((qb) => {
+            qb.where('vacancy.vacancyDescription ILIKE :description', {
+              description: `%${description?.trim()}%`,
+            }).andWhere('vacancy.vacancyRole ILIKE :role', {
+              role: `%${role?.trim()}%`,
+            });
+          }),
+        )
         .skip((page - 1) * limit)
         .take(limit)
         .getMany();
@@ -211,5 +232,23 @@ export class VacancyService {
       return this.vacancyRepository.save(vacancy);
     });
     return vacancies;
+  }
+
+  async getQuantitiesByTecnologies(): Promise<VacancyTecnologyQuantity[]> {
+    const qb = this.vacancyRepository.createQueryBuilder('vacancy');
+    qb.select('tecnology.tecName');
+    qb.innerJoin('tecnologies_vacancies', 'vt', 'vt.vacanciesId = vacancy.id');
+    qb.innerJoin('tecnologies', 'tecnology', 'tecnology.id = vt.tecnologiesId');
+    qb.groupBy('tecnology.tecName');
+    qb.addSelect('COUNT(*) AS value');
+
+    const results = await qb.getRawMany();
+
+    const quantitiesByTecnologies = results.map((result) => ({
+      name: result.tecnology_tecName,
+      vacancies: +result.value,
+    }));
+
+    return quantitiesByTecnologies;
   }
 }

@@ -8,10 +8,6 @@ import {
   Patch,
   Delete,
   UseGuards,
-  Request,
-  ParseIntPipe,
-  HttpException,
-  HttpStatus,
   Res,
   UseInterceptors,
   UploadedFile,
@@ -27,22 +23,25 @@ import { Roles } from '../decorators/role.decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 
+type VacancyTecnologyQuantity = {
+  name: string;
+  vacancies: number;
+};
+
 @UseGuards(AuthGuard)
 @Controller('vacancies')
 export class VacancyController {
   constructor(private readonly vacancyService: VacancyService) {}
 
   @Post()
-  async create(@Request() req, @Body() payload: PostVacancyDto) {
-    const advertiserId = req.user.e;
+  async create(@Body() payload: PostVacancyDto) {
     return this.vacancyService.createVacancy(payload);
   }
 
   @Get()
   findAllVacancies(
-    @Body() filter: updateVacancyDto,
     @Query('page') page = 1,
-    @Query('limit') limit = 5,
+    @Query('limit') limit = 4,
     @Query('tech') tech = '',
     @Query('role') role = '',
     @Query('wageMax') maxWage = 10000,
@@ -105,5 +104,10 @@ export class VacancyController {
       originalname: file.originalname,
       filename: file.filename,
     });
+  }
+
+  @Get('all/graphics')
+  async getQuantitiesByTecnologies(): Promise<VacancyTecnologyQuantity[]> {
+    return await this.vacancyService.getQuantitiesByTecnologies();
   }
 }

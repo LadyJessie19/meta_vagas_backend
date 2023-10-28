@@ -23,7 +23,6 @@ import { AuthGuard } from 'src/auth/guards/auth.guards';
 import { JwtInterceptor } from 'src/auth/jwt/jwt.interceptor';
 
 @ApiTags('Technology')
-@UseGuards(RolesGuard, AuthGuard)
 @Controller('tecnologies')
 export class TecnologyController {
   constructor(private readonly tecnologyService: TecnologyService) {}
