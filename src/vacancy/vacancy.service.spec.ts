@@ -5,13 +5,15 @@ import { vacancyRepositoryMock } from '../testing/vacancy-repository.mock';
 import { vacancyCreatedMock } from '../testing/vacancy-created.mock';
 import { vacanciesFoundMock } from '../testing/vacancies-found.mock';
 import { vacancyUpdatedMock } from '../testing/vacancy-updated.mock';
+import { TecnologyServiceMock } from '../testing/tecnology.service.mock';
+import { CompanyServiceMock } from '../testing/company.service.mock copy';
 
 describe('VacancyService', () => {
   let vacancyService: VacancyService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [VacancyService, userServiceMock, vacancyRepositoryMock],
+      providers: [VacancyService, userServiceMock, TecnologyServiceMock, CompanyServiceMock, vacancyRepositoryMock],
     }).compile();
 
     vacancyService = module.get<VacancyService>(VacancyService);
@@ -23,7 +25,7 @@ describe('VacancyService', () => {
 
   describe('CreateVacancy', () => {
     it('should create a vacancy', async () => {
-      const result = await vacancyService.createVacancy(vacancyCreatedMock, 1);
+      const result = await vacancyService.createVacancy(vacancyCreatedMock);
 
       expect(result).toEqual(vacancyCreatedMock);
     });
@@ -36,7 +38,7 @@ describe('VacancyService', () => {
         userName: 'teste',
       });
 
-      expect(result).toEqual(vacancyCreatedMock);
+      expect(result).toEqual(vacanciesFoundMock[0]);
     });
   });
 
