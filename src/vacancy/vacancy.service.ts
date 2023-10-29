@@ -107,37 +107,61 @@ export class VacancyService {
     description: string,
   ) {
     try {
-      const vacancies = await this.vacancyRepository
-        .createQueryBuilder('vacancy')
-        .leftJoinAndSelect(
-          'vacancy.tecnologies',
-          'tecnology',
-          ':tech ILIKE "tecnology"."tecName"',
-          { tech: `%${tech?.trim()}%` },
-        )
-        .where('vacancy.wage BETWEEN :minWage AND :maxWage', {
-          minWage,
-          maxWage,
-        })
-        .andWhere('vacancy.vacancyType ILIKE :type', {
-          type: `%${type.trim()}%`,
-        })
-        .andWhere('vacancy.location ILIKE :local', {
-          local: `%${local.trim()}%`,
-        })
-        .andWhere(
-          new Brackets((qb) => {
-            qb.where('vacancy.vacancyDescription ILIKE :description', {
-              description: `%${description?.trim()}%`,
-            }).andWhere('vacancy.vacancyRole ILIKE :role', {
-              role: `%${role?.trim()}%`,
-            });
-          }),
-        )
-        .skip((page - 1) * limit)
-        .take(limit)
-        .getMany();
-
+      let vacancies: Array<Vacancy>;
+      if (tech !== '') {
+        vacancies = await this.vacancyRepository
+          .createQueryBuilder('vacancy')
+          .leftJoinAndSelect('vacancy.tecnologies', 'Tecnology')
+          .where('vacancy.wage BETWEEN :minWage AND :maxWage', {
+            minWage,
+            maxWage,
+          })
+          .andWhere('vacancy.vacancyType ILIKE :type', {
+            type: `%${type.trim()}%`,
+          })
+          .andWhere('vacancy.location ILIKE :local', {
+            local: `%${local.trim()}%`,
+          })
+          .andWhere(
+            new Brackets((qb) => {
+              qb.where('vacancy.vacancyDescription ILIKE :description', {
+                description: `%${description?.trim()}%`,
+              }).andWhere('vacancy.vacancyRole ILIKE :role', {
+                role: `%${role?.trim()}%`,
+              });
+            }),
+          )
+          .andWhere('"Tecnology"."tecName" ILIKE :tech', { tech })
+          .skip((page - 1) * limit)
+          .take(limit)
+          .getMany();
+      } else {
+        vacancies = await this.vacancyRepository
+          .createQueryBuilder('vacancy')
+          .leftJoinAndSelect('vacancy.tecnologies', 'Tecnology')
+          .where('vacancy.wage BETWEEN :minWage AND :maxWage', {
+            minWage,
+            maxWage,
+          })
+          .andWhere('vacancy.vacancyType ILIKE :type', {
+            type: `%${type.trim()}%`,
+          })
+          .andWhere('vacancy.location ILIKE :local', {
+            local: `%${local.trim()}%`,
+          })
+          .andWhere(
+            new Brackets((qb) => {
+              qb.where('vacancy.vacancyDescription ILIKE :description', {
+                description: `%${description?.trim()}%`,
+              }).andWhere('vacancy.vacancyRole ILIKE :role', {
+                role: `%${role?.trim()}%`,
+              });
+            }),
+          )
+          .skip((page - 1) * limit)
+          .take(limit)
+          .getMany();
+      }
       return {
         vacancies,
         page,
