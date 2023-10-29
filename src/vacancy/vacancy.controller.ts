@@ -22,12 +22,13 @@ import { RoleEnum } from '../enums/user-roles.enum';
 import { Roles } from '../decorators/role.decorators';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
 type VacancyTecnologyQuantity = {
   name: string;
   vacancies: number;
 };
-
+@ApiTags('Vacancy')
 @UseGuards(AuthGuard)
 @Controller('vacancies')
 export class VacancyController {
