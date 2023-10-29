@@ -26,9 +26,9 @@
 
 ##Equipe:
 
-[@almyrneto:](https://github.com/almyrneto) | [@CaioSjc:](https://github.com/CaioSjc) | [@COFerr:](https://github.com/COFerr) | [@LadyJessie19:](https://github.com/LadyJessie19)
---- | --- | --- | ---
-![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/17ea390d-4d60-481b-9fcf-2af0eed32306) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/19e8eb12-ff88-4b12-a81c-0c96c834d229) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/91c19a99-f6d8-4acc-b81d-fd5ade593a93) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/c1675bcc-76bb-4378-a420-23afb278eca7)
+| [@almyrneto:](https://github.com/almyrneto)                                                                        | [@CaioSjc:](https://github.com/CaioSjc)                                                                            | [@COFerr:](https://github.com/COFerr)                                                                              | [@LadyJessie19:](https://github.com/LadyJessie19)                                                                  |
+| ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/17ea390d-4d60-481b-9fcf-2af0eed32306) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/19e8eb12-ff88-4b12-a81c-0c96c834d229) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/91c19a99-f6d8-4acc-b81d-fd5ade593a93) | ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/c1675bcc-76bb-4378-a420-23afb278eca7) |
 
 ##Descrição
 
@@ -56,7 +56,7 @@ Além disso a aplicação toda arquitetada por camadas, possui diversas rotas co
 - Multer File: Utilizado para facilitar o upload de arquivos.
 - create a partir XLSX: A capacidade de criar registros a partir de arquivos XLSX simplifica a importação de dados para nossa aplicação, economizando tempo e recursos.
 - @nestjs/common: @nestjs/common é um pacote fundamental do Nest.js que fornece uma ampla gama de recursos comuns e utilitários, facilitando o desenvolvimento de aplicativos robustos e escaláveis.
-- swagger:  Implementado para documentação de API, tornando a aplicação mais acessível.
+- swagger: Implementado para documentação de API, tornando a aplicação mais acessível.
 - SetMetaData: A tecnologia SetMetaData é essencial para a organização e gerenciamento eficiente dos metadados do nosso sistema, permitindo uma visão clara e estruturada dos dados.
 
 ##Estrutura do Projeto
@@ -65,9 +65,11 @@ Diagrama de entidade e relacionamento:
 
 ![image](https://github.com/LadyJessie19/meta_vagas_backend/assets/115433314/4923c5ca-8a3f-463e-a2cb-47caa73c8c81)
 
-##Ferramenta de Planejamento Utilizada:
+## Ferramenta de Planejamento Utilizada:
 
-[Trello:](https://trello.com/b/qCLbeY38/general-tasks) https://trello.com/b/qCLbeY38/general-tasks
+No link abaixo, disponibilizamos convite para a área de trabalho utilizada para a organização do projeto.
+
+https://trello.com/invite/metavagasmodulo4/ATTI9032a0682b2fa8aec1f709959dceea6bE44E8A7D
 
 ##Instalação
 
@@ -106,7 +108,10 @@ npm test '+ nome do arquivo rodado entre aspas'
 
 ##URL do Deploy
 
-Para o deploy foi utilizado a plataforma [render:](https://render.com/) https://render.com/
+Para o deploy foi utilizado a plataforma [railway:] https://railway.app/
 
 [URL BASE:](https://metavagasbackend-production.up.railway.app/) https://metavagasbackend-production.up.railway.app/
 
+## Swagger da aplicação
+
+https://metavagasbackend-production.up.railway.app/v1/docs
