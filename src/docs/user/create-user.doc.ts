@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { RoleEnum } from "../../enums/user-roles.enum";
+import { RoleEnum } from '../../enums/user-roles.enum';
 
 export class CreateUserDoc {
   @ApiProperty({
@@ -13,7 +13,7 @@ export class CreateUserDoc {
   email: string;
 
   @ApiProperty({
-    example: '123456',
+    example: '12345678',
   })
   password: string;
 

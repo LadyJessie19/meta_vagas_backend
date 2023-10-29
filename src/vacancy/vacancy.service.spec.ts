@@ -21,54 +21,58 @@ describe('VacancyService', () => {
     expect(vacancyService).toBeDefined();
   });
 
-  describe("CreateVacancy" , () => {
-    it("should create a vacancy", async () => {
-      const result = await vacancyService.createVacancy(vacancyCreatedMock)
+  describe('CreateVacancy', () => {
+    it('should create a vacancy', async () => {
+      const result = await vacancyService.createVacancy(vacancyCreatedMock, 1);
 
       expect(result).toEqual(vacancyCreatedMock);
-    })
+    });
   });
 
-  describe("findVacancyById" , () => {
+  describe('findVacancyById', () => {
     it("should find a vacancy by it's id", async () => {
-      const result = await vacancyService.findVacancyById({id : vacancyCreatedMock.id, userName : "teste"})
+      const result = await vacancyService.findVacancyById({
+        id: vacancyCreatedMock.id,
+        userName: 'teste',
+      });
 
       expect(result).toEqual(vacancyCreatedMock);
-    })
+    });
   });
 
-  describe("findVacancies" , () => {
-    it("should find an vacancy array", async () => {
-
+  describe('findVacancies', () => {
+    it('should find an vacancy array', async () => {
       const result = await vacancyService.findVacancies(
         /*page :*/ 1,
         /*limit :*/ 5,
-        /*tech :*/ "",
-        /*role :*/ "",
+        /*tech :*/ '',
+        /*role :*/ '',
         /*maxWage :*/ 10000,
         /*minWage : */ 0,
-        /*type :*/ "",
-        /*local :*/ "",
-        /*description :*/ ""
-      )
-      expect(result).toEqual({vacancies : vacanciesFoundMock, page: 1, pageSize: 5, quantity: 3});
-    })
+        /*type :*/ '',
+        /*local :*/ '',
+        /*description :*/ '',
+      );
+      expect(result).toEqual({
+        vacancies: vacanciesFoundMock,
+        page: 1,
+        pageSize: 5,
+        quantity: 3,
+      });
+    });
   });
-  
-  describe("updateVacancy" , () => {
-    it("should update an existing vacancy", async () => {
 
-      const result = await vacancyService.updateVacancy( 1, vacancyUpdatedMock)
+  describe('updateVacancy', () => {
+    it('should update an existing vacancy', async () => {
+      const result = await vacancyService.updateVacancy(1, vacancyUpdatedMock);
       expect(result).toEqual(true);
-    })
+    });
   });
 
-  describe("deleteVacancy" , () => {
-    it("should update an existing vacancy", async () => {
-
-      const result = await vacancyService.deleteVacancy(1)
+  describe('deleteVacancy', () => {
+    it('should update an existing vacancy', async () => {
+      const result = await vacancyService.deleteVacancy(1);
       expect(result).toEqual(true);
-    })
+    });
   });
-
 });
