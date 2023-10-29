@@ -29,7 +29,6 @@ type VacancyTecnologyQuantity = {
   vacancies: number;
 };
 @ApiTags('Vacancy')
-@UseGuards(AuthGuard)
 @Controller('vacancies')
 export class VacancyController {
   constructor(private readonly vacancyService: VacancyService) {}
