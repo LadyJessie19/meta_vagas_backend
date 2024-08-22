@@ -25,7 +25,7 @@
 
 ## Equipe:
 
-| [![almyrneto](https://github.com/almyrneto.png)](https://github.com/almyrneto) | [![CaioSjc](https://github.com/CaioSjc.png)](https://github.com/CaioSjc) | [![COFerr](https://github.com/COFerr.png)](https://github.com/COFerr) | [![LadyJessie19](https://github.com/LadyJessie19.png)](https://github.com/LadyJessie19) |
+| [![almyrneto](https://github.com/almyrneto.png)](https://github.com/almyrneto) | [![CaioSjc](https://github.com/caio-henrique-dev.png)](https://github.com/caio-henrique-dev) | [![COFerr](https://github.com/COFerr.png)](https://github.com/COFerr) | [![LadyJessie19](https://github.com/LadyJessie19.png)](https://github.com/LadyJessie19) |
 | --- | --- | --- | --- |
 | [almyrneto](https://github.com/almyrneto) | [CaioSjc](https://github.com/CaioSjc) | [COFerr](https://github.com/COFerr) | [LadyJessie19](https://github.com/LadyJessie19) |
 
